@@ -8,11 +8,11 @@
 <h2>Login</h2>
 @using (Html.BeginForm())
 {
-    <p class="text-danger">@Html.ValidationSummary(true)</p>
+    @Html.ValidationSummary(true)
     @Html.LabelFor(model => model.Email)
-    @Html.TextBoxFor(model => model.Email)
+    @Html.TextBoxFor(model => model.Email, new { @class = "form-control", type = "email", placeholder = "Email-adres", autofocus = "true", required = "true"})
 
     @Html.LabelFor(model => model.Password)
-    @Html.PasswordFor(model => model.Password)
+    @Html.PasswordFor(model => model.Password, new { @class = "form-control", placeholder = "password", required = "true" })
     <input value="Login" type="submit" />
 }
