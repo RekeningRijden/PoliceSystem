@@ -22,6 +22,12 @@ namespace PoliceSystem.Controllers
             return View(user);
         }
 
+        public ActionResult Register()
+        {
+            var user = new User();
+            return View(user);
+        }
+
         [HttpPost]
         public ActionResult Login(User user)
         {
@@ -40,6 +46,19 @@ namespace PoliceSystem.Controllers
                     return View(user);
                 }
             }
+        }
+
+
+
+        [HttpPost]
+        public ActionResult CreateUser(User user)
+        {
+            using (PoliceDbContext db = new PoliceDbContext())
+            {
+                db.Users.Add(user);
+                db.SaveChanges();
+            }
+            return View(user);
         }
     }
 }
