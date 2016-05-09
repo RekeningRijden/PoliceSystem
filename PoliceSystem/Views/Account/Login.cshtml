@@ -1,4 +1,4 @@
-﻿@model PoliceSystem.Models.LoginViewModel
+﻿@model PoliceSystem.Models.User
 
 @{
     ViewBag.Title = "Login";
@@ -9,10 +9,11 @@
 @using (Html.BeginForm())
 {
     @Html.ValidationSummary(true)
-    @Html.LabelFor(model => model.Email)
-    @Html.TextBoxFor(model => model.Email, new { @class = "form-control", type = "email", placeholder = "Email-adres", autofocus = "true", required = "true"})
+    @Html.LabelFor(model => model.Username)
+    @Html.TextBoxFor(model => model.Username, new { @class = "form-control", type = "email", placeholder = "Email-adres", autofocus = "true", required = "true" })
 
     @Html.LabelFor(model => model.Password)
     @Html.PasswordFor(model => model.Password, new { @class = "form-control", placeholder = "password", required = "true" })
     <input value="Login" type="submit" />
 }
+
