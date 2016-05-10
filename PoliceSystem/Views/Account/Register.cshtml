@@ -8,13 +8,31 @@
 <h2>Register</h2>
 @using (Html.BeginForm())
 {
-    @Html.ValidationSummary(true)
-    @Html.LabelFor(model => model.Username)
-    @Html.TextBoxFor(model => model.Username, new { @class = "form-control", type = "email", placeholder = "Email-adres", autofocus = "true", required = "true" })
+    <fieldset>
+        <div class="row">
+            <section class="col-xs-6">
+                <div class="form-group">
+                    <label class="control-label"><i class="fa fa-star-o" /> Username</label>
+                    @Html.TextBoxFor(model => model.Username, new { @class = "form-control", type = "email", placeholder = "Email-adres", autofocus = "true", required = "true" })
+                </div>
+            </section>
 
-    @Html.LabelFor(model => model.Password)
-    @Html.PasswordFor(model => model.Password, new { @class = "form-control", placeholder = "password", required = "true" })
-    <input value="Create User" type="submit" />
+            <section class="col-xs-6">
+                <div class="form-group">
+                    <label class="control-label"><i class="fa fa-star-o" /> Password</label>
+                    @Html.PasswordFor(model => model.Password, new { @class = "form-control", placeholder = "password", required = "true" })
+                </div>
+            </section>
+        </div>
+        <div class="row">
+            <div class="col-xs-12">
+                <input class="btn btn-primary" value="Create User" type="submit" />
+            </div>
+        </div>
+    </fieldset>
 }
+
+
+
 
 
