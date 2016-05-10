@@ -208,6 +208,8 @@
     <Compile Include="DAL\PoliceDbContext.cs" />
     <Compile Include="DAL\UserDao.cs" />
     <Compile Include="DAL\UserDaoImpl.cs" />
+    <Compile Include="DAL\UserGroupDao.cs" />
+    <Compile Include="DAL\UserGroupDaoImpl.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
