@@ -1,5 +1,5 @@
 ﻿using PoliceSystem.DAL;
-using PoliceSystem.Models;
+using PoliceSystem.Models.Domain;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,7 +21,7 @@ namespace PoliceSystem.Controllers
 
         public ActionResult Login()
         {
-            var user = new User();
+            User user = new User();
             return View(user);
         }
 
@@ -31,7 +31,7 @@ namespace PoliceSystem.Controllers
             if (userDao.UserExists(user))
             {
                 //Get user etc.
-                return Redirect("/Home/Index");
+                return Redirect("/Account/Index");
             }
             else
             {

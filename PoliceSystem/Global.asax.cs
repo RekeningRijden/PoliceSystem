@@ -18,7 +18,7 @@ namespace PoliceSystem
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
-            Database.SetInitializer(new DropCreateDatabaseIfModelChanges<PoliceDbContext>());
+            Database.SetInitializer(new PoliceDbInitializer());
         }
     }
 }
