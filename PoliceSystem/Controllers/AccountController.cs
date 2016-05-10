@@ -10,6 +10,8 @@ namespace PoliceSystem.Controllers
 {
     public class AccountController : Controller
     {
+        private UserDao userDao = new UserDaoImp();
+
         // GET: Account
         public ActionResult Index()
         {
@@ -31,33 +33,22 @@ namespace PoliceSystem.Controllers
         [HttpPost]
         public ActionResult Login(User user)
         {
-            using (PoliceDbContext db = new PoliceDbContext())
+            if (userDao.UserExists(user))
             {
-                System.Diagnostics.Debug.WriteLine("Email: " + user.Username);
-                System.Diagnostics.Debug.WriteLine("password: " + user.Password);
-                bool userExists = db.Users.Any(u => u.Username == user.Username && u.Password == user.Password);
-                if (userExists)
-                {
-                    return Redirect("/Home/Index");
-                }
-                else
-                {
-                    ModelState.AddModelError("", "De gebruikersnaam of het wachtwoord is incorrect.");
-                    return View(user);
-                }
+                //Get user etc.
+                return Redirect("/Home/Index");
+            }
+            else
+            {
+                ModelState.AddModelError("", "De gebruikersnaam of het wachtwoord is incorrect.");
+                return View(user);
             }
         }
 
-
-
         [HttpPost]
-        public ActionResult CreateUser(User user)
+        public ActionResult Register(User user)
         {
-            using (PoliceDbContext db = new PoliceDbContext())
-            {
-                db.Users.Add(user);
-                db.SaveChanges();
-            }
+            
             return View(user);
         }
     }

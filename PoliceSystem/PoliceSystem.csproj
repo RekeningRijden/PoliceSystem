@@ -206,6 +206,8 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="DAL\PoliceDbContext.cs" />
+    <Compile Include="DAL\UserDao.cs" />
+    <Compile Include="DAL\UserDaoImp.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
