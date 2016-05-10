@@ -8,13 +8,15 @@ namespace PoliceSystem.DAL
 {
     public class UserDaoImpl : UserDao
     {
+        private UserGroupDao userGroupDao = new UserGroupDaoImpl();
+
         public void Create(User user)
         {
             using (PoliceDbContext db = new PoliceDbContext())
             {
                 if (FindByUsername(user.Username) == null)
                 {
-                    //Set usergroup
+                    user.UserGroup = userGroupDao.FindByName("default");
                     db.Users.Add(user);
                     db.SaveChanges();
                 }

@@ -19,6 +19,7 @@ namespace PoliceSystem.Models
 
         [Required]
         public string Password { get; set; }
+        
         public UserGroup UserGroup { get; set; }
     }
 }
