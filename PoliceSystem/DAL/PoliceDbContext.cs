@@ -4,7 +4,6 @@ using System.Linq;
 using System.Web;
 using System.Data.Entity;
 using System.Data.Entity.ModelConfiguration.Conventions;
-using PoliceSystem.Models;
 using PoliceSystem.Models.Domain;
 using MySql.Data.Entity;
 
@@ -14,7 +13,7 @@ namespace PoliceSystem.DAL
     {
         public PoliceDbContext() : base("name=PoliceDbContextConnectionString")
         {
-
+            Database.SetInitializer<PoliceDbContext>(new PoliceDbInitializer());
         }
 
         public DbSet<User> Users { get; set; }

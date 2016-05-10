@@ -206,6 +206,7 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="DAL\PoliceDbContext.cs" />
+    <Compile Include="DAL\PoliceDbInitializer.cs" />
     <Compile Include="DAL\UserDao.cs" />
     <Compile Include="DAL\UserDaoImpl.cs" />
     <Compile Include="DAL\UserGroupDao.cs" />

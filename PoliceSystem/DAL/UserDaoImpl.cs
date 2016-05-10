@@ -1,8 +1,8 @@
-﻿using System;
+﻿using PoliceSystem.Models.Domain;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using PoliceSystem.Models;
 
 namespace PoliceSystem.DAL
 {

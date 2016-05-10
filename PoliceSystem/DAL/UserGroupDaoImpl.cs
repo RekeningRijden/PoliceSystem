@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using PoliceSystem.Models;
 using PoliceSystem.Models.Domain;
 
 namespace PoliceSystem.DAL
