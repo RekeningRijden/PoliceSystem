@@ -7,7 +7,7 @@ using System.Web;
 
 namespace PoliceSystem.DAL
 {
-    public class PoliceDbInitializer : DropCreateDatabaseIfModelChanges<PoliceDbContext>
+    public class PoliceDbInitializer : DropCreateDatabaseAlways<PoliceDbContext>
     {
 
         protected override void Seed(PoliceDbContext db)

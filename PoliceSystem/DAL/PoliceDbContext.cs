@@ -24,7 +24,8 @@ namespace PoliceSystem.DAL
             modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
             modelBuilder.Entity<User>()
                     .HasRequired<UserGroup>(u => u.UserGroup) // User entity requires UserGroup 
-                    .WithMany(ug => ug.Users); // Standard entity includes many Students entities
+                    .WithMany(ug => ug.Users)
+                    .WillCascadeOnDelete(false); // Standard entity includes many Students entities
         }
     }
 }

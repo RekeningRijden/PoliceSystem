@@ -16,7 +16,9 @@ namespace PoliceSystem.DAL
             {
                 if (FindByUsername(user.Username) == null)
                 {
-                    user.UserGroup = userGroupDao.FindByName("default");
+                    UserGroup userGroup = userGroupDao.FindByName("default");
+                    db.UserGroups.Attach(userGroup);
+                    user.UserGroup = userGroup;
                     db.Users.Add(user);
                     db.SaveChanges();
                 }

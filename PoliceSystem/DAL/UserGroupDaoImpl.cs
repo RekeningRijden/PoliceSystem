@@ -52,22 +52,22 @@ namespace PoliceSystem.DAL
 
         public void AddToUserGroup(UserGroup userGroup, User user)
         {
-            using (PoliceDbContext db = new PoliceDbContext())
-            {
-                userGroup.Users.Add(user);
+            //using (PoliceDbContext db = new PoliceDbContext())
+            //{
+            //    userGroup.Users.Add(user);
 
-                db.UserGroups.Attach(userGroup);
-                var userGroupEntry = db.Entry(userGroup);
-                userGroupEntry.Property(ug => ug.Users).IsModified = true;
+            //    db.UserGroups.Attach(userGroup);
+            //    var userGroupEntry = db.Entry(userGroup);
+            //    userGroupEntry.Property(ug => ug.Users).IsModified = true;
 
-                user.UserGroup = userGroup;
+            //    user.UserGroup = userGroup;
 
-                db.Users.Attach(user);
-                var userEntry = db.Entry(user);
-                userEntry.Property(u => u.UserGroup).IsModified = true;
+            //    db.Users.Attach(user);
+            //    var userEntry = db.Entry(user);
+            //    userEntry.Property(u => u.UserGroup).IsModified = true;
 
-                db.SaveChanges();
-            }
+            //    db.SaveChanges();
+            //}
         }
     }
 }

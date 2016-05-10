@@ -50,7 +50,7 @@ namespace PoliceSystem.Controllers
         public ActionResult Register(User user)
         {
             userDao.Create(user);
-            return View(user);
+            return Redirect("/Home/Index");
         }
     }
 }
