@@ -10,7 +10,7 @@ namespace PoliceSystem.Controllers
 {
     public class AccountController : Controller
     {
-        private UserDao userDao = new UserDaoImp();
+        private UserDao userDao = new UserDaoImpl();
 
         // GET: Account
         public ActionResult Index()
