@@ -18,6 +18,7 @@ namespace PoliceSystem.DAL
         }
 
         public DbSet<User> Users { get; set; }
+        public DbSet<UserGroup> UserGroups { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
