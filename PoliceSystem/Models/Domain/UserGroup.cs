@@ -11,10 +11,7 @@ namespace PoliceSystem.Models.Domain
         public string Name { get; set; }
         public List<User> Users { get; set; }
 
-        public UserGroup()
-        {
-
-        }
+        public UserGroup() { }
 
         public UserGroup(string Name)
         {
