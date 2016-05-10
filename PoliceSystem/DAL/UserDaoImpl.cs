@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Data.Entity;
 
 namespace PoliceSystem.DAL
 {
@@ -35,7 +36,7 @@ namespace PoliceSystem.DAL
             {
                 try
                 {
-                    return db.Users.Single(u => u.Id == id);
+                    return db.Users.Include(u => u.UserGroup).Single(u => u.Id == id);
                 }
                 catch (ArgumentNullException ex)
                 {
@@ -55,7 +56,7 @@ namespace PoliceSystem.DAL
             {
                 try
                 {
-                    return db.Users.Single(u => u.Username == username);
+                    return db.Users.Include(u => u.UserGroup).Single(u => u.Username == username);
                 }
                 catch (ArgumentNullException ex)
                 {

@@ -11,6 +11,6 @@ namespace PoliceSystem.Models.Domain
         private string FirstName { get; set; }
         private string Lastname { get; set; }
         private Address Address { get; set; }
-        private List<Driver> Driver { get; set; }
+        private List<Driver> UserDriver { get; set; }
     }
 }

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Security;
 
 namespace PoliceSystem.Controllers
 {
@@ -13,9 +14,11 @@ namespace PoliceSystem.Controllers
         private UserDao userDao = new UserDaoImpl();
 
         // GET: Account
+        [Authorize]
         public ActionResult Index()
         {
-            var user = userDao.FindByUsername("ericderegter@gmail.com");
+            string username = HttpContext.User.Identity.Name;
+            User user = userDao.FindByUsername(username);
             return View(user);
         }
 
@@ -31,6 +34,7 @@ namespace PoliceSystem.Controllers
             if (userDao.UserExists(user))
             {
                 //Get user etc.
+                FormsAuthentication.SetAuthCookie(user.Username, false);
                 return Redirect("/Account/Index");
             }
             else
@@ -40,17 +44,25 @@ namespace PoliceSystem.Controllers
             }
         }
 
+        [Authorize(Roles = "admin")]
         public ActionResult Register()
         {
             var user = new User();
             return View(user);
         }
 
+        [Authorize(Roles = "admin")]
         [HttpPost]
         public ActionResult Register(User user)
         {
             userDao.Create(user);
             return Redirect("/Home/Index");
+        }
+
+        public ActionResult Logout()
+        {
+            FormsAuthentication.SignOut();
+            return Redirect("/Account/Login");
         }
     }
 }

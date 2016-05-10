@@ -6,10 +6,12 @@
 }
 
 <h2>Index</h2>
-@Html.LabelForModel(Model.Username);
-@Html.LabelForModel(Model.Id);
-@Html.LabelForModel(Model.UserGroup);
+@Html.LabelForModel("Username: " + Model.Username)
+<br/>
+@Html.LabelForModel("ID: " + Model.Id)
+<br/>
+@Html.LabelForModel("Group: " + Model.UserGroup.Name)
+<br/>
 
-
-@Html.ActionLink("Register","Register");
+@Html.ActionLink("Register","Register")
 

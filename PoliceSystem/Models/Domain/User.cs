@@ -19,7 +19,11 @@ namespace PoliceSystem.Models.Domain
 
         [Required]
         public string Password { get; set; }
-        
+
+        [ForeignKey("UserGroup")]
+        public int UserGroupId { get; set; }
+
+       
         public UserGroup UserGroup { get; set; }
     }
 }
