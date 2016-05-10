@@ -15,16 +15,11 @@ namespace PoliceSystem.Controllers
         // GET: Account
         public ActionResult Index()
         {
-            return View();
-        }
-
-        public ActionResult Login()
-        {
-            var user = new User();
+            var user = userDao.FindByUsername("ericderegter@gmail.com");
             return View(user);
         }
 
-        public ActionResult Register()
+        public ActionResult Login()
         {
             var user = new User();
             return View(user);
@@ -45,10 +40,16 @@ namespace PoliceSystem.Controllers
             }
         }
 
+        public ActionResult Register()
+        {
+            var user = new User();
+            return View(user);
+        }
+
         [HttpPost]
         public ActionResult Register(User user)
         {
-            
+            userDao.Create(user);
             return View(user);
         }
     }
