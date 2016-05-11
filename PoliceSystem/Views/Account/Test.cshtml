@@ -1,0 +1,38 @@
+﻿@model List<PoliceSystem.Models.Domain.Driver>
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Testing the api call</h2>
+
+<br />
+<br />
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Firstname</th>
+            <th>Lastname</th>
+            <th>City</th>
+            <th>Street</th>
+            <th>Street Nr.</th>
+            <th>Zipcode</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var driver in Model)
+            {
+            <tr>
+                <td>@driver.Id</td>
+                <td>@driver.Firstname</td>
+                <td>@driver.Lastname</td>
+                <td>@driver.Address.City</td>
+                <td>@driver.Address.Street</td>
+                <td>@driver.Address.StreetNr</td>
+                <td>@driver.Address.ZipCode</td>
+            </tr>
+        }
+    </tbody>
+</table>

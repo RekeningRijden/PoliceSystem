@@ -43,7 +43,7 @@ namespace PoliceSystem.DAL
                     throw new InvalidOperationException("Cannot delete admin account");
                 }
 
-                context.Users.Attach(user);
+                //context.Users.Attach(user);
                 context.Users.Remove(user);
                 context.SaveChanges();
             }

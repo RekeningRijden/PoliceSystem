@@ -1,9 +1,11 @@
-﻿using PoliceSystem.DAL;
+﻿using PoliceSystem.Api;
+using PoliceSystem.DAL;
 using PoliceSystem.Models.Domain;
 using PoliceSystem.Models.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
@@ -120,6 +122,14 @@ namespace PoliceSystem.Controllers
                 //If the user could not be deleted from the database, the reason is displayed in the [Get] Delete view
                 return RedirectToAction("Delete", new { errorMessage = ex.Message });
             }
+        }
+
+        //Needs to be async all the way to the controller otherwise a thread deadlock will occur
+        public async Task<ActionResult> Test()
+        {
+            DriverCalls calls = new DriverCalls();
+            List<Driver> drivers = await calls.GetAllDrivers();
+            return View(drivers);
         }
     }
 }
