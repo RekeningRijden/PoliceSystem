@@ -15,6 +15,8 @@ namespace PoliceSystem.DAL
 
         Car FindById(int id, PoliceDbContext context);
 
+        Car FindByLicencePlate(string licencePlate, PoliceDbContext context);
+
         void Remove(Car car, PoliceDbContext context); 
     }
 }

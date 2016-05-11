@@ -10,7 +10,13 @@ namespace PoliceSystem.Models.Domain
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
+        public string LicencePlate { get; set; }
         public bool Stolen { get; set; }
         public List<Theftinfo> Thefts { get; set; }
+
+        public Car()
+        {
+
+        }
     }
 }

@@ -27,11 +27,19 @@ namespace PoliceSystem.DAL
             }
         }
 
-        public void FindById(int id)
+        public Car FindById(int id)
         {
             using (PoliceDbContext context = new PoliceDbContext())
             {
-                carDao.FindById(id, context);
+                return carDao.FindById(id, context);
+            }
+        }
+
+        public Car FindByLicencePlate(string licencePlate)
+        {
+            using (PoliceDbContext context = new PoliceDbContext())
+            {
+                return carDao.FindByLicencePlate(licencePlate, context);
             }
         }
 

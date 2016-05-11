@@ -1,0 +1,28 @@
+﻿@model PoliceSystem.Models.ViewModels.CarViewModel
+@{
+    ViewBag.Title = "CarOverview";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>CarOverview</h2>
+
+@using (Html.BeginForm())
+{
+    <div class="row">
+        <div class="col-xs-8 col-xs-offset-2">
+            <div class="form-group">
+                <div class="input-group">
+                    @Html.TextBoxFor(model => model.Car.LicencePlate, new { @class = "form-control", autofocus = "true", required = "true" })
+
+                    <span class="input-group-btn">
+                        <button class="btn btn-primary" type="submit">
+                            <i class="fa fa-search" />
+                            Find
+                        </button>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+

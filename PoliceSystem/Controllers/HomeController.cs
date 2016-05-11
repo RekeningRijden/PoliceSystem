@@ -20,5 +20,10 @@ namespace PoliceSystem.Controllers
             User user = userService.FindByUsername(username);
             return View(user);
         }
+
+        public ActionResult CarOverview()
+        {
+            return View();
+        }
     }
 }

@@ -21,16 +21,21 @@ namespace PoliceSystem.DAL
             context.Entry(original).CurrentValues.SetValues(car);
             context.SaveChanges();
         }
+       
+        public Car FindById(int id, PoliceDbContext context)
+        {
+            return context.Cars.Find(id);
+        }
+
+        public Car FindByLicencePlate(string licencePlate, PoliceDbContext context)
+        {
+            return context.Cars.Single(c => c.LicencePlate == licencePlate);
+        }
 
         public void Remove(Car car, PoliceDbContext context)
         {
             context.Cars.Remove(car);
             context.SaveChanges();
-        }
-
-        public Car FindById(int id, PoliceDbContext context)
-        {
-            return context.Cars.Find(id);
         }
     }
 }
