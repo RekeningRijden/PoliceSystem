@@ -12,12 +12,12 @@ namespace PoliceSystem.Controllers
     [Authorize]
     public class HomeController : Controller
     {
-        private UserDao userDao = new UserDaoImpl();
+        private UserService userService = new UserService();
         
         public ActionResult Index()
         {
             string username = HttpContext.User.Identity.Name;
-            User user = userDao.FindByUsername(username);
+            User user = userService.FindByUsername(username);
             return View(user);
         }
     }

@@ -26,19 +26,19 @@ namespace PoliceSystem.DAL
             }
         }
 
+        public void Remove(Theftinfo theftInfo)
+        {
+            using (PoliceDbContext context = new PoliceDbContext())
+            {
+                theftInfoDao.Remove(theftInfo, context);
+            }
+        }
+
         public void FindById(int id)
         {
             using (PoliceDbContext context = new PoliceDbContext())
             {
                 theftInfoDao.FindById(id, context);
-            }
-        }
-
-        public void Delete(Theftinfo theftInfo)
-        {
-            using (PoliceDbContext context = new PoliceDbContext())
-            {
-                theftInfoDao.Delete(theftInfo, context);
             }
         }
     }

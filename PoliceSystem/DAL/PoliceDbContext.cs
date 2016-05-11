@@ -18,15 +18,28 @@ namespace PoliceSystem.DAL
 
         public DbSet<User> Users { get; set; }
         public DbSet<UserGroup> UserGroups { get; set; }
+        public DbSet<Car> Cars { get; set; }
+        public DbSet<Theftinfo> Theftinfos { get; set; }
+        public DbSet<Address> Addresses { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
             modelBuilder.Entity<User>()
                     .HasRequired<UserGroup>(u => u.UserGroup) // User entity requires UserGroup 
-                    //.WithMany(ug => ug.Users)
                     .WithMany()
                     .WillCascadeOnDelete(false); // Standard entity includes many Students entities
+
+            modelBuilder.Entity<Theftinfo>()
+                  .HasOptional<Car>(t => t.Car) // User entity requires UserGroup 
+                  .WithMany()
+                  .WillCascadeOnDelete(false); // Standard entity includes many Students entities
+
+            modelBuilder.Entity<Theftinfo>()
+              .HasOptional(t => t.LastSeenLocation);
+
+            modelBuilder.Entity<Theftinfo>()
+              .HasOptional(t => t.CarFoundLocation);
         }
     }
 }

@@ -12,15 +12,15 @@ namespace PoliceSystem.Controllers
 {
     public class AccountController : Controller
     {
-        private UserDao userDao = new UserDaoImpl();
+        private UserService userService = new UserService();
 
         // GET: Account
         [Authorize]
         public ActionResult Index()
         {
             string username = HttpContext.User.Identity.Name;
-            User user = userDao.FindByUsername(username);
-            List<User> users = userDao.getAllUsers();
+            User user = userService.FindByUsername(username);
+            List<User> users = userService.getAllUsers();
 
             //Use viewModel or Partial view for multiple models
             var userAccountViewModel = new UserAccountViewModel(user, users);
@@ -38,7 +38,7 @@ namespace PoliceSystem.Controllers
         [HttpPost]
         public ActionResult Login(User user)
         {
-            if (userDao.IsValid(user))
+            if (userService.IsValid(user))
             {
                 //Get user etc.
                 FormsAuthentication.SetAuthCookie(user.Username, false);
@@ -66,7 +66,7 @@ namespace PoliceSystem.Controllers
         {
             try
             {
-                userDao.Create(user);
+                userService.Create(user);
                 return RedirectToAction("Index");
             }
             catch (InvalidOperationException ex)
@@ -99,7 +99,7 @@ namespace PoliceSystem.Controllers
                 ModelState.AddModelError("", "No user selected to delete");
                 return Redirect("/Account/Index");
             }
-            User user = userDao.FindById(id.Value);
+            User user = userService.FindById(id.Value);
 
             return View(user);
 
@@ -112,7 +112,7 @@ namespace PoliceSystem.Controllers
         {
             try
             {
-                userDao.Remove(user.Id);
+                userService.Remove(user.Id);
                 return RedirectToAction("Index");
             }
             catch (InvalidOperationException ex)

@@ -11,123 +11,97 @@ namespace PoliceSystem.DAL
     {
         private UserGroupDao userGroupDao = new UserGroupDaoImpl();
 
-        public void Create(User user)
+        public void Create(User user, PoliceDbContext context)
         {
-            using (PoliceDbContext db = new PoliceDbContext())
+            if (FindByUsername(user.Username, context) == null)
             {
-                if (FindByUsername(user.Username) == null)
+                UserGroup userGroup = userGroupDao.FindByName("default");
+                context.UserGroups.Attach(userGroup);
+                user.UserGroup = userGroup;
+                context.Users.Add(user);
+                context.SaveChanges();
+            }
+            else
+            {
+                //laat de gebruiker weten dat de username bezet is
+                throw new InvalidOperationException("Username already exists");
+            }
+        }
+        
+        public void Update(User user, PoliceDbContext context)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Remove(int id, PoliceDbContext context)
+        {
+            User user = FindById(id, context);
+            if (UserExists(user, context))
+            {
+                if (user.UserGroup.Name.Equals("admin"))
                 {
-                    UserGroup userGroup = userGroupDao.FindByName("default");
-                    db.UserGroups.Attach(userGroup);
-                    user.UserGroup = userGroup;
-                    db.Users.Add(user);
-                    db.SaveChanges();
+                    throw new InvalidOperationException("Cannot delete admin account");
                 }
-                else
-                {
-                    //laat de gebruiker weten dat de username bezet is
-                    throw new InvalidOperationException("Username already exists");
-                }
+
+                context.Users.Attach(user);
+                context.Users.Remove(user);
+                context.SaveChanges();
+            }
+
+            else
+            {
+                //User doesnt exists.
+                throw new InvalidOperationException("User with username: " + user.Username + " does not exist");
             }
         }
 
-        public User FindById(int id)
+        public User FindById(int id, PoliceDbContext context)
         {
-            using (PoliceDbContext db = new PoliceDbContext())
+            try
             {
-                try
-                {
-                    return db.Users.Include(u => u.UserGroup).Single(u => u.Id == id);
-                }
-                catch (ArgumentNullException ex)
-                {
-                    //Zero or more than one users found
-                }
-                catch (InvalidOperationException ex)
-                {
-                    //Zero or more than one users found
-                }
-                return null;
+                return context.Users.Include(u => u.UserGroup).Single(u => u.Id == id);
             }
+            catch (ArgumentNullException ex)
+            {
+                //Zero or more than one users found
+            }
+            catch (InvalidOperationException ex)
+            {
+                //Zero or more than one users found
+            }
+            return null;
         }
 
-        public User FindByUsername(string username)
+        public User FindByUsername(string username, PoliceDbContext context)
         {
-            using (PoliceDbContext db = new PoliceDbContext())
+            try
             {
-                try
-                {
-                    return db.Users.Include(u => u.UserGroup).Single(u => u.Username == username);
-                }
-                catch (ArgumentNullException ex)
-                {
-                    //Zero or more than one users found
-                }
-                catch (InvalidOperationException ex)
-                {
-                    //Zero or more than one users found
-                }
-                return null;
+                return context.Users.Include(u => u.UserGroup).Single(u => u.Username == username);
             }
+            catch (ArgumentNullException ex)
+            {
+                //Zero or more than one users found
+            }
+            catch (InvalidOperationException ex)
+            {
+                //Zero or more than one users found
+            }
+            return null;
         }
 
-        public List<User> getAllUsers()
+        public bool UserExists(User user, PoliceDbContext context)
         {
-            using (PoliceDbContext db =new PoliceDbContext())
-            {
-                return db.Users.Include(u => u.UserGroup).ToList();
-            }
+            return context.Users.Any(u => u.Username == user.Username && u.Id == user.Id);
         }
 
-        public void Remove(int id)
+        public bool IsValid(User user, PoliceDbContext context)
         {
-            using (PoliceDbContext db = new PoliceDbContext())
-            {
-                User user = FindById(id);
-                if (UserExists(user))
-                {
-                    if (user.UserGroup.Name.Equals("admin"))
-                    {
-                        throw new InvalidOperationException("Cannot delete admin account");
-                    }
-
-                    db.Users.Attach(user);
-                    db.Users.Remove(user);
-                    db.SaveChanges();
-                }
-
-                else
-                {
-                    //User doesnt exists.
-                    throw new InvalidOperationException("User with username: " + user.Username + " does not exist");
-                }
-            }
+            return context.Users.Any(u => u.Username == user.Username && u.Password == user.Password);
         }
 
-        /// <summary>
-        /// Checks if the user exists in the database, based on the combination of the id and username
-        /// </summary>
-        /// <param name="user">The user with username and id</param>
-        /// <returns>True if the user exists, false if not</returns>
-        public bool UserExists(User user)
+        public List<User> getAllUsers(PoliceDbContext context)
         {
-            using (PoliceDbContext db = new PoliceDbContext())
-            {
-                return db.Users.Any(u => u.Username == user.Username && u.Id == user.Id);
-            }
-        }
-
-        /// <summary>
-        /// Check if the user credentials are valid
-        /// </summary>
-        /// <param name="user">The user with username and password</param>
-        /// <returns>True if valid, false if not valid</returns>
-        public bool IsValid(User user)
-        {
-            using (PoliceDbContext db = new PoliceDbContext())
-            {
-                return db.Users.Any(u => u.Username == user.Username && u.Password == user.Password);
-            }
+            return context.Users.Include(u => u.UserGroup).ToList();
         }
     }
 }

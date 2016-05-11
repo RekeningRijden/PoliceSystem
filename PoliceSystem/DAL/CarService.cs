@@ -9,7 +9,7 @@ namespace PoliceSystem.DAL
     public class CarService
     {
 
-        private CarDaoImpl carDao = new CarDaoImpl();
+        private CarDao carDao = new CarDaoImpl();
 
         public void Create(Car car)
         {
@@ -35,11 +35,11 @@ namespace PoliceSystem.DAL
             }
         }
 
-        public void Delete(Car car)
+        public void Remove(Car car)
         {
             using (PoliceDbContext context = new PoliceDbContext())
             {
-                carDao.Delete(car, context);
+                carDao.Remove(car, context);
             }
         }
     }

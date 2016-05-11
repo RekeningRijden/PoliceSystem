@@ -10,22 +10,27 @@ namespace PoliceSystem.DAL
     {
         public void Create(Theftinfo theftInfo, PoliceDbContext context)
         {
-            throw new NotImplementedException();
-        }
-
-        public void Delete(Theftinfo theftInfo, PoliceDbContext context)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void FindById(int id, PoliceDbContext context)
-        {
-            throw new NotImplementedException();
+            context.Theftinfos.Add(theftInfo);
+            context.SaveChanges();
         }
 
         public void Update(Theftinfo theftInfo, PoliceDbContext context)
         {
-            throw new NotImplementedException();
+            Theftinfo original = FindById(theftInfo.Id, context);
+
+            context.Entry(original).CurrentValues.SetValues(theftInfo);
+            context.SaveChanges();
+        }
+
+        public void Remove(Theftinfo theftInfo, PoliceDbContext context)
+        {
+            context.Theftinfos.Remove(theftInfo);
+            context.SaveChanges();
+        }
+
+        public Theftinfo FindById(int id, PoliceDbContext context)
+        {
+            return context.Theftinfos.Find(id);
         }
     }
 }
