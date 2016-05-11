@@ -50,8 +50,8 @@ namespace PoliceSystem
 
         public override string[] GetRolesForUser(string username)
         {
-            UserDao userDao = new UserDaoImpl();
-            User user = userDao.FindByUsername(username);
+            UserService userService = new UserService();
+            User user = userService.FindByUsername(username);
             string[] roles = { user.UserGroup.Name };
             return roles;
         }

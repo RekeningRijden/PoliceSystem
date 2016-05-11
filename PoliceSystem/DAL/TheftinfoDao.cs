@@ -13,8 +13,8 @@ namespace PoliceSystem.DAL
 
         void Update(Theftinfo theftInfo, PoliceDbContext context);
 
-        void FindById(int id, PoliceDbContext context);
+        void Remove(Theftinfo theftInfo, PoliceDbContext context);
 
-        void Delete(Theftinfo theftInfo, PoliceDbContext context);
+        Theftinfo FindById(int id, PoliceDbContext context);
     }
 }

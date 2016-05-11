@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
 
@@ -7,8 +8,9 @@ namespace PoliceSystem.Models.Domain
 {
     public class Car
     {
-        private int Id { get; set; }
-        private bool Stolen { get; set; }
-        private List<Theftinfo> Thefts { get; set; }
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
+        public bool Stolen { get; set; }
+        public List<Theftinfo> Thefts { get; set; }
     }
 }
