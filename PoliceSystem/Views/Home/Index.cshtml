@@ -1,12 +1,10 @@
-﻿@{
+﻿@model PoliceSystem.Models.Domain.User
+@{
     ViewBag.Title = "Home Page";
 }
 
-<div id="content">
-    <div class="row">
-    <div class="col-xs-8">
-        Hoiiiii
-        
-    </div>
-</div>
-</div>
+<h2>Welcome @Html.LabelForModel(Model.Username)</h2>
+@Html.ActionLink("Logout", "Logout", "Account");
+
+
+

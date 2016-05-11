@@ -13,10 +13,16 @@ namespace PoliceSystem.DAL
 
         bool UserExists(User user);
 
+        bool IsValid(User user);
+
         User FindById(int id);
 
         User FindByUsername(string username);
 
-        void Remove(User user);
+        void Remove(int id);
+
+        List<User> getAllUsers();
+
+        
     }
 }

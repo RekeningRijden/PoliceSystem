@@ -1,0 +1,31 @@
+﻿@model PoliceSystem.Models.Domain.User
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Are you sure you want to delete @Html.LabelForModel(Model.Username)</h2>
+    @using (Html.BeginForm())
+    {
+        @Html.ValidationSummary(true)
+
+        @Html.LabelForModel("Id: " + Model.Id)
+        <br />
+        @Html.LabelForModel("Username: " + Model.Username)
+        <br />
+        @Html.LabelForModel("Role: " + Model.UserGroup.Name)
+        <br />
+        @Html.HiddenFor(model => Model.Id)
+        @Html.HiddenFor(model => Model.Username)
+        @Html.HiddenFor(model => Model.UserGroup.Name)
+        if (Model.UserGroup.Name.Equals("admin"))
+        {
+            <input class="btn btn-default disabled" value="Delete" type="button" />
+        }
+        else
+        {
+            <input class="btn btn-default" value="Delete" type="submit" />
+        }
+    }
+
