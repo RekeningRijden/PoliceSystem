@@ -1,4 +1,4 @@
-﻿@model PoliceSystem.Models.Domain.Car
+﻿@model PoliceSystem.Models.ViewModels.CarViewModel
 @{
     ViewBag.Title = "Car";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -8,6 +8,8 @@
 
 @using (Html.BeginForm())
 {
+    @Html.HiddenFor(model => model.Car.Id)
+
     <fieldset>
         <div class="col-xs-8 col-xs-offset-2">
             <div class="row">
@@ -15,7 +17,7 @@
                     <section>
                         <div class="form-group">
                             <label class="control-label">LicencPlate</label>
-                            @Html.TextBoxFor(model => model.LicencePlate, new { @class = "form-control", disabled = "true" })
+                            @Html.TextBoxFor(model => model.Car.LicencePlate, new { @class = "form-control", disabled = "true" })
                         </div>
                     </section>
                 </div>
@@ -24,24 +26,109 @@
                         <div class="form-group">
                             <div class="checkbox">
                                 <label>
-                                      @Html.CheckBoxFor(model => model.Stolen, new { @checked = "checked", disabled="true" })
+                                    @Html.CheckBoxFor(model => model.Car.Stolen, new { @checked = "checked", disabled = "true" })
                                     <span>Stolen</span>
                                 </label>
                             </div>
                         </div>
                     </section>
+
+                    @if (Model.Car.Stolen)
+                    {
+                        <a class="btn btn-primary" onclick="$('#carModal').modal('show')">Set as found</a>
+                    }
+                    else
+                    {
+                        <a class="btn btn-primary" onclick="$('#carModal').modal('show')">Set as stolen</a>
+                    }
                 </div>
             </div>
 
             <div class="row">
                 <div class="col-xs-6">
                     <legend>Ownerships</legend>
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Driver</th>
+                                <th>Address</th>
+                                <th>Started</th>
+                                <th>Ended</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="success">
+                                <td>@Model.Car.CurrentOwnership.Driver.GetFullName()</td>
+                                <td>@Model.Car.CurrentOwnership.Driver.Address.GetFullAddress()</td>
+                                <td>@Html.DisplayFor(model => model.Car.CurrentOwnership.StartDate)</td>
+                                <td>@Html.DisplayFor(model => model.Car.CurrentOwnership.EndDate)</td>
+                            </tr>
+                            @foreach (var ownership in Model.Car.PastOwnerships)
+                            {
+                                <tr>
+                                    <td>@ownership.Driver.Firstname @ownership.Driver.Lastname</td>
+                                    <td>@ownership.Driver.Address.Street @ownership.Driver.Address.StreetNr @ownership.Driver.Address.City</td>
+                                    <td>@ownership.StartDate</td>
+                                    <td>@ownership.EndDate</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
                 </div>
                 <div class="col-xs-6">
                     <legend>Crime history</legend>
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Date last seen</th>
+                                <th>Last seen location</th>
+                                <th>Date found</th>
+                                <th>Location found</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var theftinfo in Model.Car.Thefts)
+                            {
+                                <tr>
+                                    <td>@theftinfo.LastSeenDate</td>
+                                    <td>@theftinfo.LastSeenLocation.GetFullAddress()</td>
+                                    <td>@theftinfo.CarFoundDate</td>
+                                    <td>@theftinfo.CarFoundLocation.GetFullAddress()</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
     </fieldset>
-}
 
+    <div class="modal fade" data-backdrop="static" id="carModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <a class="close" onclick="$('#carModal').modal('hide')">
+                        x
+                    </a>
+                    <h5>Set car as stolen</h5>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label class="control-label">Date last seen</label>
+                        @Html.TextBoxFor(model => model.Theftinfo.LastSeenDate, new { @class = "datepicker form-control" })
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" type="submit">
+                        <i class="fa fa-check" />
+                        Save
+                    </button>
+                    <a class="btn btn-default" onclick="$('#carModal').modal('hide')">
+                        Cancel
+                    </a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+}

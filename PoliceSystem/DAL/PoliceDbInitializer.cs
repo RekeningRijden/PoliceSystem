@@ -38,6 +38,13 @@ namespace PoliceSystem.DAL
             db.Users.Add(eric);
             db.SaveChanges();
 
+            Car car = new Car();
+            car.LicencePlate = "44-DD-33";
+            car.Stolen = false;
+
+            db.Cars.Add(car);
+            db.SaveChanges();
+
             base.Seed(db);
         }
     }

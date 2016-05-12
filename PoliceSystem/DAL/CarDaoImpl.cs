@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Web;
 using PoliceSystem.Models.Domain;
+
 
 namespace PoliceSystem.DAL
 {
@@ -16,20 +18,31 @@ namespace PoliceSystem.DAL
 
         public void Update(Car car, PoliceDbContext context)
         {
-            Car original = FindById(car.Id, context);
+            foreach(Theftinfo t in car.Thefts)
+            {
+                context.Addresses.Add(t.LastSeenLocation);
+                context.Addresses.Add(t.CarFoundLocation);
+            }
 
-            context.Entry(original).CurrentValues.SetValues(car);
+            context.Cars.Attach(car);
+        
+            context.Entry(car).State = EntityState.Modified;
+            
+            car.Thefts.Where(x => x.Id == 0).ToList().ForEach(x => context.Entry(x).State = EntityState.Added);
+            car.Thefts.Where(x => x.Id != 0).ToList().ForEach(x => context.Entry(x).State = EntityState.Modified);
+
             context.SaveChanges();
         }
        
         public Car FindById(int id, PoliceDbContext context)
         {
-            return context.Cars.Find(id);
+            return context.Cars.Include(c => c.Thefts).Single(c => c.Id == id);
         }
 
         public Car FindByLicencePlate(string licencePlate, PoliceDbContext context)
         {
-            return context.Cars.Single(c => c.LicencePlate == licencePlate);
+            Car car = context.Cars.Include(c => c.Thefts).Single(c => c.LicencePlate == licencePlate);
+return car;
         }
 
         public void Remove(Car car, PoliceDbContext context)
