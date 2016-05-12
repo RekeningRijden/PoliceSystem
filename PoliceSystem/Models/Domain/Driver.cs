@@ -17,5 +17,10 @@ namespace PoliceSystem.Models.Domain
         [JsonProperty("address")]
         public Address Address { get; set; }
         public List<Ownership> ownerships { get; set; }
+
+        public string GetFullName()
+        {
+            return Firstname + " " + Lastname;
+        }
     }
 }

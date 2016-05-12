@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
 
@@ -7,10 +8,12 @@ namespace PoliceSystem.Models.Domain
 {
     public class Ownership
     {
-        private int Id { get; set; }
-        private DateTime StartDate { get; set; }
-        private DateTime EndDate { get; set; }
-        private Car Car { get; set; }
-        private Driver Driver { get; set; }
+        public int Id { get; set; }
+        [DisplayFormat(DataFormatString = "{0:dd MMM yyyy}")]
+        public DateTime StartDate { get; set; }
+        [DisplayFormat(DataFormatString = "{0:dd MMM yyyy}")]
+        public DateTime EndDate { get; set; }
+        public Car Car { get; set; }
+        public Driver Driver { get; set; }
     }
 }

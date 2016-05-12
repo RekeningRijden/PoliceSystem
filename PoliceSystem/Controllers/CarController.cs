@@ -6,19 +6,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.Threading.Tasks;
+using PoliceSystem.Api;
 
 namespace PoliceSystem.Controllers
 {
     public class CarController : Controller
     {
-        // GET: Car
-        public ActionResult Car(string licencePlate)
-        {
-            CarService carService = new CarService();
-            Car car = carService.FindByLicencePlate(licencePlate);
-
-            return View(car);
-        }
 
         public ActionResult CarOverview()
         {
@@ -26,10 +20,36 @@ namespace PoliceSystem.Controllers
             return View(new CarViewModel(car));
         }
 
+        // GET: Car
+        public async Task<ActionResult> Car(string licencePlate)
+        {
+            Car car = new CarService().FindByLicencePlate(licencePlate);
+            car = await new CarCalls().GetAllDataFromCar(car);
+
+            return View(new CarViewModel(car));
+        }
+
         [HttpPost]
         public ActionResult CarOverview(CarViewModel carViewModel)
         {
             return RedirectToAction("Car", "Car", new { licencePlate = carViewModel.Car.LicencePlate });
+        }
+
+        [HttpPost]
+        public ActionResult Car(CarViewModel carViewModel)
+        {
+
+            Car car = new CarService().FindById(carViewModel.Car.Id);
+            car.Stolen = !car.Stolen;
+
+            if (car.Stolen)
+            {
+                car.Thefts.Add(carViewModel.Theftinfo);
+            }
+
+            new CarService().Update(car);
+
+            return RedirectToAction("Car", "Car", new { licencePlate = car.LicencePlate });
         }
     }
 }

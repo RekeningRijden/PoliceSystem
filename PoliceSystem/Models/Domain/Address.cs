@@ -22,5 +22,14 @@ namespace PoliceSystem.Models.Domain
         public string City { get; set; }
         [JsonProperty("country")]
         public string Country { get; set; }
+
+        public string GetFullAddress()
+        {
+            return Street + " "
+                + StreetNr + " "
+                 + ZipCode + " "
+                  + City + " "
+                   + Country;
+        }
     }
 }
