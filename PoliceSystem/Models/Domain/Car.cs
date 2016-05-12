@@ -14,6 +14,9 @@ namespace PoliceSystem.Models.Domain
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
+        [JsonProperty("cartrackerId")]
+        public int CarTrackerId { get; set; }
+
         [JsonProperty("licencePlate")]
         public string LicencePlate { get; set; }
 
@@ -26,6 +29,9 @@ namespace PoliceSystem.Models.Domain
         [NotMapped]
         [JsonProperty("pastOwnerships")]
         public List<Ownership> PastOwnerships { get; set; }
+
+        [NotMapped]
+        public List<TrackingPeriod> TrackingPeriods { get; set; }
 
         public Car()
         {

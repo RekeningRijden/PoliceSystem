@@ -48,5 +48,29 @@ namespace PoliceSystem.Api
                 throw new WebException("Something went wrong with the API call. Status code: " + response.StatusCode);
             }
         }
+
+        public async Task<Car> GetCarWithLicencePlate(string licencePlate)
+        {
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri(baseUrl);
+                client.DefaultRequestHeaders.Accept.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+                HttpResponseMessage response = await client.GetAsync("api/users/cars/" + licencePlate);
+                if (response.IsSuccessStatusCode)
+                {
+                    string jsonResponse = await response.Content.ReadAsStringAsync();
+                    System.Diagnostics.Debug.WriteLine("RESPONSE: " + jsonResponse);
+                    Car car = JsonConvert.DeserializeObject<Car>(jsonResponse);
+                    return car;
+                }
+                else
+                {
+                    System.Diagnostics.Debug.WriteLine("Something went wrong with the API call. Status code: " + response.StatusCode);
+                }
+                throw new WebException("Something went wrong with the API call. Status code: " + response.StatusCode);
+            }
+        }
     }
 }

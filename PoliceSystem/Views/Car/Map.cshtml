@@ -1,0 +1,51 @@
+﻿@model PoliceSystem.Models.Domain.Car
+@{
+    ViewBag.Title = "Map";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Map</h2>
+<script src="http://maps.googleapis.com/maps/api/js"></script>
+<script>
+    function initialize() {
+        var mapProp = {
+            center: new google.maps.LatLng(40.50624820202864, -8,032760983386718),
+            zoom: 7,
+            mapTypeId: google.maps.MapTypeId.ROADMAP
+        };
+        var map = new google.maps.Map(document.getElementById("googleMap"), mapProp);
+
+        var myTrip = [];
+        $('[data-marker]').each(function () {
+            var data = $(this).data('marker');
+            var latlong = new google.maps.LatLng(data.Latitude, data.Longitude);
+            myTrip.push(latlong);
+        });
+
+        var flightPath = new google.maps.Polyline({
+            path: myTrip,
+            strokeColor: "#0000FF",
+            strokeOpacity: 0.8,
+            strokeWeight: 2
+        });
+        flightPath.setMap(map);
+
+        var testmarker = new google.maps.Marker({
+            position: new google.maps.LatLng(40.50624820202864, -8, 032760983386718),
+        });
+
+        testmarker.setMap(map);
+    }
+    google.maps.event.addDomListener(window, 'load', initialize);
+
+</script>
+<div id="googleMap" style="width:500px;height:380px;"></div>
+
+@foreach(var trackingPeriod in Model.TrackingPeriods)
+{
+    foreach(var position in trackingPeriod.Positions)
+    {
+        <div data-marker="@Json.Encode(position)"></div>
+    }
+}
+

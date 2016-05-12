@@ -51,5 +51,14 @@ namespace PoliceSystem.Controllers
 
             return RedirectToAction("Car", "Car", new { licencePlate = car.LicencePlate });
         }
+
+        public async Task<ActionResult> Map()
+        {
+            CarCalls Carcalls = new CarCalls();
+            LocationCalls locationCalls = new LocationCalls();
+            Car car = await Carcalls.GetCarWithLicencePlate("44-DD-33");
+            car.TrackingPeriods = await locationCalls.GetAllTrackingPeriodsFor(car);
+            return View(car);
+        }
     }
 }
