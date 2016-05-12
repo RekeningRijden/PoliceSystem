@@ -35,7 +35,7 @@
 
                     @if (Model.Car.Stolen)
                     {
-                        <a class="btn btn-primary" onclick="$('#carModal').modal('show')">Set as found</a>
+                        <a class="btn btn-primary" onclick="$('#carFoundModal').modal('show')">Set as found</a>
                     }
                     else
                     {
@@ -113,11 +113,55 @@
                     <h5>Set car as stolen</h5>
                 </div>
                 <div class="modal-body">
-                    <div class="form-group">
-                        <label class="control-label">Date last seen</label>
-                        @Html.TextBoxFor(model => model.Theftinfo.LastSeenDate, new { @class = "datepicker form-control" })
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="form-group">
+                                <label class="control-label">Date last seen</label>
+                                @Html.TextBoxFor(model => model.Theftinfo.LastSeenDate, new { @class = "datepicker form-control" })
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <section class="col-xs-9">
+                            <div class="form-group">
+                                <label class="control-label">Street</label>
+                                @Html.TextBoxFor(model => model.Theftinfo.LastSeenLocation.Street, new { @class = "form-control" })
+                            </div>
+                        </section>
+
+                        <section class="col-xs-3">
+                            <div class="form-group">
+                                <label class="control-label">Nr</label>
+                                @Html.TextBoxFor(model => model.Theftinfo.LastSeenLocation.StreetNr, new { @class = "form-control" })
+                            </div>
+                        </section>
+                    </div>
+
+                    <div class="row">
+                        <section class="col-xs-4">
+                            <div class="form-group">
+                                <label class="control-label">Zipcode</label>
+                                @Html.TextBoxFor(model => model.Theftinfo.LastSeenLocation.ZipCode, new { @class = "form-control" })
+                            </div>
+                        </section>
+
+                        <section class="col-xs-4">
+                            <div class="form-group">
+                                <label class="control-label">City</label>
+                                @Html.TextBoxFor(model => model.Theftinfo.LastSeenLocation.City, new { @class = "form-control" })
+                            </div>
+                        </section>
+
+                        <section class="col-xs-4">
+                            <div class="form-group">
+                                <label class="control-label">Country</label>
+                                @Html.TextBoxFor(model => model.Theftinfo.LastSeenLocation.Country, new { @class = "form-control" })
+                            </div>
+                        </section>
                     </div>
                 </div>
+
                 <div class="modal-footer">
                     <button class="btn btn-primary" type="submit">
                         <i class="fa fa-check" />
@@ -127,7 +171,78 @@
                         Cancel
                     </a>
                 </div>
+            </div>
+        </div>
+    </div>
 
+    <div class="modal fade" data-backdrop="static" id="carFoundModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <a class="close" onclick="$('#carFoundModal').modal('hide')">
+                        x
+                    </a>
+                    <h5>Set car as found</h5>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="form-group">
+                                <label class="control-label">Car found date</label>
+                                @Html.TextBoxFor(model => model.Theftinfo.CarFoundDate, new { @class = "datepicker form-control" })
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <section class="col-xs-9">
+                            <div class="form-group">
+                                <label class="control-label">Street</label>
+                                @Html.TextBoxFor(model => model.Theftinfo.CarFoundLocation.Street, new { @class = "form-control" })
+                            </div>
+                        </section>
+
+                        <section class="col-xs-3">
+                            <div class="form-group">
+                                <label class="control-label">Nr</label>
+                                @Html.TextBoxFor(model => model.Theftinfo.CarFoundLocation.StreetNr, new { @class = "form-control" })
+                            </div>
+                        </section>
+                    </div>
+
+                    <div class="row">
+                        <section class="col-xs-4">
+                            <div class="form-group">
+                                <label class="control-label">Zipcode</label>
+                                @Html.TextBoxFor(model => model.Theftinfo.CarFoundLocation.ZipCode, new { @class = "form-control" })
+                            </div>
+                        </section>
+
+                        <section class="col-xs-4">
+                            <div class="form-group">
+                                <label class="control-label">City</label>
+                                @Html.TextBoxFor(model => model.Theftinfo.CarFoundLocation.City, new { @class = "form-control" })
+                            </div>
+                        </section>
+
+                        <section class="col-xs-4">
+                            <div class="form-group">
+                                <label class="control-label">Country</label>
+                                @Html.TextBoxFor(model => model.Theftinfo.CarFoundLocation.Country, new { @class = "form-control" })
+                            </div>
+                        </section>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button class="btn btn-primary" type="submit">
+                        <i class="fa fa-check" />
+                        Save
+                    </button>
+                    <a class="btn btn-default" onclick="$('#carFoundModal').modal('hide')">
+                        Cancel
+                    </a>
+                </div>
             </div>
         </div>
     </div>
