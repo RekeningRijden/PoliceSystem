@@ -18,8 +18,27 @@
         var myTrip = [];
         $('[data-marker]').each(function () {
             var data = $(this).data('marker');
-            var latlong = new google.maps.LatLng(data.Latitude, data.Longitude);
-            myTrip.push(latlong);
+
+            for (var i = 0; i < data.Positions.length; i++) {
+                var latlong = new google.maps.LatLng(data.Positions[i].Latitude, data.Positions[i].Longitude);
+                myTrip.push(latlong);
+            }
+
+            var marker = new google.maps.Marker({
+                position: new google.maps.LatLng(data.Positions[0].Latitude, data.Positions[0].Longitude),
+            });
+
+            marker.setMap(map);
+            
+            var endTrackingDate = ToJavaScriptDate(data.FinishedTracking);
+            var infowindow = new google.maps.InfoWindow({
+                
+                content: "Checkpoint: " + endTrackingDate
+            });
+
+            google.maps.event.addListener(marker, 'click', function () {
+                infowindow.open(map, marker);
+            });
         });
 
         var flightPath = new google.maps.Polyline({
@@ -30,12 +49,16 @@
         });
         flightPath.setMap(map);
 
-        var testmarker = new google.maps.Marker({
-            position: new google.maps.LatLng(40.50624820202864, -8, 032760983386718),
-        });
-
-        testmarker.setMap(map);
+        
     }
+
+    function ToJavaScriptDate(value) {
+        var pattern = /Date\(([^)]+)\)/;
+        var results = pattern.exec(value);
+        var dt = new Date(parseFloat(results[1]));
+        return dt.getDate() + "-" + (dt.getMonth() + 1) + "-" + dt.getFullYear() + " (" + dt.getHours() + ":" + dt.getMinutes() + ":" + dt.getSeconds() + ")";
+    }
+
     google.maps.event.addDomListener(window, 'load', initialize);
 
 </script>
@@ -45,7 +68,7 @@
 {
     foreach(var position in trackingPeriod.Positions)
     {
-        <div data-marker="@Json.Encode(position)"></div>
+        <div data-marker="@Json.Encode(trackingPeriod)"></div>
     }
 }
 
