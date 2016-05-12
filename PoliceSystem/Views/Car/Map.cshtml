@@ -66,9 +66,6 @@
 
 @foreach(var trackingPeriod in Model.TrackingPeriods)
 {
-    foreach(var position in trackingPeriod.Positions)
-    {
         <div data-marker="@Json.Encode(trackingPeriod)"></div>
-    }
 }
 
