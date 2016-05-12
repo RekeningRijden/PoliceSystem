@@ -17,6 +17,8 @@ namespace PoliceSystem.DAL
 
         Car FindByLicencePlate(string licencePlate, PoliceDbContext context);
 
-        void Remove(Car car, PoliceDbContext context); 
+        bool CarExists(string licencePlate, PoliceDbContext context);
+
+        void Remove(Car car, PoliceDbContext context);
     }
 }

@@ -41,8 +41,12 @@ namespace PoliceSystem.DAL
 
         public Car FindByLicencePlate(string licencePlate, PoliceDbContext context)
         {
-            Car car = context.Cars.Include(c => c.Thefts.Select(t => t.LastSeenLocation)).Single(c => c.LicencePlate == licencePlate);
-            return car;
+            return context.Cars.Include(c => c.Thefts.Select(t => t.LastSeenLocation)).Single(c => c.LicencePlate == licencePlate);
+        }
+
+        public bool CarExists(string licencePlate, PoliceDbContext context)
+        {
+            return context.Cars.Any(c => c.LicencePlate == licencePlate);
         }
 
         public void Remove(Car car, PoliceDbContext context)
