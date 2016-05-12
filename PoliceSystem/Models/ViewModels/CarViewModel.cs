@@ -9,6 +9,7 @@ namespace PoliceSystem.Models.ViewModels
     public class CarViewModel
     {
         public Car Car { get; set; }
+        public List<Car> Cars { get; set; }
         public Theftinfo Theftinfo { get; set; }
 
         public CarViewModel()

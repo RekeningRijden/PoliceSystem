@@ -18,31 +18,31 @@ namespace PoliceSystem.DAL
 
         public void Update(Car car, PoliceDbContext context)
         {
-            foreach(Theftinfo t in car.Thefts)
+            foreach (Theftinfo t in car.Thefts)
             {
-                context.Addresses.Add(t.LastSeenLocation);
-                context.Addresses.Add(t.CarFoundLocation);
+                if (t.LastSeenLocation.Id == 0) { context.Addresses.Add(t.LastSeenLocation); }
+                if (t.CarFoundLocation.Id == 0) { context.Addresses.Add(t.CarFoundLocation); }
             }
 
             context.Cars.Attach(car);
-        
+
             context.Entry(car).State = EntityState.Modified;
-            
+
             car.Thefts.Where(x => x.Id == 0).ToList().ForEach(x => context.Entry(x).State = EntityState.Added);
             car.Thefts.Where(x => x.Id != 0).ToList().ForEach(x => context.Entry(x).State = EntityState.Modified);
 
             context.SaveChanges();
         }
-       
+
         public Car FindById(int id, PoliceDbContext context)
         {
-            return context.Cars.Include(c => c.Thefts).Single(c => c.Id == id);
+            return context.Cars.Include(c => c.Thefts.Select(t => t.LastSeenLocation)).Single(c => c.Id == id);
         }
 
         public Car FindByLicencePlate(string licencePlate, PoliceDbContext context)
         {
-            Car car = context.Cars.Include(c => c.Thefts).Single(c => c.LicencePlate == licencePlate);
-return car;
+            Car car = context.Cars.Include(c => c.Thefts.Select(t => t.LastSeenLocation)).Single(c => c.LicencePlate == licencePlate);
+            return car;
         }
 
         public void Remove(Car car, PoliceDbContext context)

@@ -23,10 +23,17 @@ namespace PoliceSystem.Controllers
         // GET: Car
         public async Task<ActionResult> Car(string licencePlate)
         {
-            Car car = new CarService().FindByLicencePlate(licencePlate);
-            car = await new CarCalls().GetAllDataFromCar(car);
+            if (licencePlate == null || licencePlate.Equals(""))
+            {
+                return Redirect("CarOverview");
+            }
+            else
+            {
+                Car car = new CarService().FindByLicencePlate(licencePlate);
+                car = await new CarCalls().GetAllDataFromCar(car);
 
-            return View(new CarViewModel(car));
+                return View(new CarViewModel(car));
+            }
         }
 
         [HttpPost]
@@ -45,6 +52,15 @@ namespace PoliceSystem.Controllers
             if (car.Stolen)
             {
                 car.Thefts.Add(carViewModel.Theftinfo);
+            }
+            else
+            {
+                Address lsl = car.Thefts.Last().CarFoundLocation;
+                lsl.Street = carViewModel.Theftinfo.CarFoundLocation.Street;
+                lsl.StreetNr = carViewModel.Theftinfo.CarFoundLocation.StreetNr;
+                lsl.ZipCode = carViewModel.Theftinfo.CarFoundLocation.ZipCode;
+                lsl.City = carViewModel.Theftinfo.CarFoundLocation.City;
+                lsl.Country = carViewModel.Theftinfo.CarFoundLocation.Country;
             }
 
             new CarService().Update(car);
