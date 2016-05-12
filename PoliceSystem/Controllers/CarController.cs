@@ -29,8 +29,23 @@ namespace PoliceSystem.Controllers
             }
             else
             {
-                Car car = new CarService().FindByLicencePlate(licencePlate);
-                car = await new CarCalls().GetAllDataFromCar(car);
+                CarService carService = new CarService();
+                CarCalls calCalls = new CarCalls();
+
+                Car car;
+                if(carService.CarExists(licencePlate))
+                {
+                    car = carService.FindByLicencePlate(licencePlate);
+                }
+                else
+                {
+                    car = await calCalls.GetCarWithLicencePlate(licencePlate);
+                    car.Id = 0;
+
+                    carService.Create(car);
+                }
+
+                car = await calCalls.FillCarWithData(car);
 
                 return View(new CarViewModel(car));
             }

@@ -43,6 +43,14 @@ namespace PoliceSystem.DAL
             }
         }
 
+        public bool CarExists(string licencePlate)
+        {
+            using (PoliceDbContext context = new PoliceDbContext())
+            {
+                return carDao.CarExists(licencePlate, context);
+            }
+        }
+
         public void Remove(Car car)
         {
             using (PoliceDbContext context = new PoliceDbContext())

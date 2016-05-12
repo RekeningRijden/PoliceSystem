@@ -20,7 +20,7 @@ namespace PoliceSystem.Api
         /// Creates an async Get call
         /// </summary>
         /// <returns>A task with a fully filled <Car> object</returns>
-        public async Task<Car> GetAllDataFromCar(Car car)
+        public async Task<Car> FillCarWithData(Car car)
         {
             using (var client = new HttpClient())
             {
