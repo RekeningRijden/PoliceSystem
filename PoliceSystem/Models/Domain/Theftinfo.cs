@@ -14,6 +14,7 @@ namespace PoliceSystem.Models.Domain
         [DisplayFormat(DataFormatString = "{0:dd MMM yyyy}")]
         public DateTime LastSeenDate { get; set; }
         public Address LastSeenLocation { get; set; }
+
         public Car Car { get; set; }
         [DisplayFormat(DataFormatString = "{0:dd MMM yyyy}")]
         public DateTime CarFoundDate { get; set; }

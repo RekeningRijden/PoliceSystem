@@ -33,7 +33,7 @@ namespace PoliceSystem.Controllers
                 CarCalls calCalls = new CarCalls();
 
                 Car car;
-                if(carService.CarExists(licencePlate))
+                if (carService.CarExists(licencePlate))
                 {
                     car = carService.FindByLicencePlate(licencePlate);
                 }
@@ -70,12 +70,12 @@ namespace PoliceSystem.Controllers
             }
             else
             {
-                Address lsl = car.Thefts.Last().CarFoundLocation;
-                lsl.Street = carViewModel.Theftinfo.CarFoundLocation.Street;
-                lsl.StreetNr = carViewModel.Theftinfo.CarFoundLocation.StreetNr;
-                lsl.ZipCode = carViewModel.Theftinfo.CarFoundLocation.ZipCode;
-                lsl.City = carViewModel.Theftinfo.CarFoundLocation.City;
-                lsl.Country = carViewModel.Theftinfo.CarFoundLocation.Country;
+                Address cfl = carViewModel.Theftinfo.CarFoundLocation;
+                car.Thefts.Last().CarFoundLocation.Street = cfl.Street;
+                car.Thefts.Last().CarFoundLocation.StreetNr = cfl.StreetNr;
+                car.Thefts.Last().CarFoundLocation.ZipCode = cfl.ZipCode;
+                car.Thefts.Last().CarFoundLocation.City = cfl.City;
+                car.Thefts.Last().CarFoundLocation.Country = cfl.Country;
             }
 
             new CarService().Update(car);

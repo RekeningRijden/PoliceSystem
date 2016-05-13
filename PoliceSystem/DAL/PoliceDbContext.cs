@@ -31,15 +31,18 @@ namespace PoliceSystem.DAL
                     .WillCascadeOnDelete(false); // Standard entity includes many Students entities
 
             modelBuilder.Entity<Theftinfo>()
-                  .HasOptional<Car>(t => t.Car) // User entity requires UserGroup 
-                  .WithMany()
-                  .WillCascadeOnDelete(false); // Standard entity includes many Students entities
+                .HasOptional(t => t.Car)
+                .WithMany(c => c.Thefts);
+
+            modelBuilder.Entity<Car>()
+                .HasMany(c => c.Thefts)
+                .WithOptional(t => t.Car);
 
             modelBuilder.Entity<Theftinfo>()
-              .HasOptional(t => t.LastSeenLocation);
+              .HasRequired(t => t.LastSeenLocation);
 
             modelBuilder.Entity<Theftinfo>()
-              .HasOptional(t => t.CarFoundLocation);
+              .HasRequired(t => t.CarFoundLocation);
         }
     }
 }

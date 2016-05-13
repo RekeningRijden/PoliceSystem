@@ -2,6 +2,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
@@ -21,7 +22,7 @@ namespace PoliceSystem.Models.Domain
         public string LicencePlate { get; set; }
 
         public bool Stolen { get; set; }
-        public List<Theftinfo> Thefts { get; set; }
+        public ICollection<Theftinfo> Thefts { get; set; }
 
         [NotMapped]
         [JsonProperty("currentOwnership")]

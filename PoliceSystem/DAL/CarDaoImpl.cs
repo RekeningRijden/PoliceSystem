@@ -20,9 +20,11 @@ namespace PoliceSystem.DAL
         {
             foreach (Theftinfo t in car.Thefts)
             {
-                if (t.LastSeenLocation.Id == 0) { context.Addresses.Add(t.LastSeenLocation); }
-                if (t.CarFoundLocation.Id == 0) { context.Addresses.Add(t.CarFoundLocation); }
+                if (t.LastSeenLocation.Id == 0) { context.Addresses.Add(t.LastSeenLocation); } else { context.Entry<Address>(t.LastSeenLocation).State = EntityState.Modified; }
+                if (t.CarFoundLocation.Id == 0) { context.Addresses.Add(t.CarFoundLocation); } else { context.Entry<Address>(t.CarFoundLocation).State = EntityState.Modified; }
             }
+
+
 
             context.Cars.Attach(car);
 
@@ -36,12 +38,17 @@ namespace PoliceSystem.DAL
 
         public Car FindById(int id, PoliceDbContext context)
         {
-            return context.Cars.Include(c => c.Thefts.Select(t => t.LastSeenLocation)).Single(c => c.Id == id);
+            return context.Cars.Include(c => c.Thefts.Select(t => t.LastSeenLocation))
+                .Include(c => c.Thefts.Select(t => t.CarFoundLocation))
+                .Single(c => c.Id == id);
         }
 
         public Car FindByLicencePlate(string licencePlate, PoliceDbContext context)
         {
-            return context.Cars.Include(c => c.Thefts.Select(t => t.LastSeenLocation)).Single(c => c.LicencePlate == licencePlate);
+            return context.Cars.Include(c => c.Thefts.Select(t => t.CarFoundLocation))
+                .Include(c => c.Thefts.Select(t => t.LastSeenLocation))
+
+                .Single(c => c.LicencePlate == licencePlate);
         }
 
         public bool CarExists(string licencePlate, PoliceDbContext context)
