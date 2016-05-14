@@ -14,7 +14,7 @@ namespace PoliceSystem.Api
     public class DriverCalls
     {
         private static string baseUrl = "http://administration.s63a.marijn.ws/";
-        
+
         /// <summary>
         /// Creates an async Get call, If await client.GetAsync doesn't work, it's because of a deadlock. See AccountController/Test
         /// </summary>

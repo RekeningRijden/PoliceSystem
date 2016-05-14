@@ -87,7 +87,7 @@ namespace PoliceSystem.Controllers
         {
             CarCalls Carcalls = new CarCalls();
             LocationCalls locationCalls = new LocationCalls();
-            Car car = await Carcalls.GetCarWithLicencePlate("44-DD-33");
+            Car car = new Car() { LicencePlate = "44-DD-33", CarTrackerId = 9 };
             car.TrackingPeriods = await locationCalls.GetAllTrackingPeriodsFor(car);
             return View(car);
         }

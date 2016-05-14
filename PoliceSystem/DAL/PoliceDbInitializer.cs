@@ -34,8 +34,14 @@ namespace PoliceSystem.DAL
             eric.Password = "test";
             eric.UserGroup = adminGroup;
 
+            User tester = new User();
+            tester.Username = "tester@gmail.com";
+            tester.Password = "test";
+            tester.UserGroup = adminGroup;
+
             db.Users.Add(sam);
             db.Users.Add(eric);
+            db.Users.Add(tester);
             db.SaveChanges();
 
             Car car = new Car();
