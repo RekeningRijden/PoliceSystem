@@ -49,8 +49,6 @@
             strokeWeight: 2
         });
         flightPath.setMap(map);
-
-
     }
 
     function ToJavaScriptDate(value) {
@@ -65,12 +63,14 @@
             position: new google.maps.LatLng(message.trackingPeriod.positions[0].latitude, message.trackingPeriod.positions[0].longitude),
             animation: google.maps.Animation.DROP
         });
+        map.panTo(marker.getPosition());
         marker.setMap(map);
     }
 
     google.maps.event.addDomListener(window, 'load', initialize);
 
-    var wsUri = "ws://192.168.1.111:8080/MovementSystem/socket/example-PathParameter-value";
+    //var wsUri = "ws://192.168.1.111:8080/MovementSystem/socket/example-PathParameter-value";
+    var wsUri = "ws://movement.s63a.marijn.ws/socket";
     var output;
     function init() {
         output = document.getElementById("output");
@@ -87,8 +87,6 @@
         websocket.onerror = function (evt) {
             onError(evt);
         };
-
-
     }
 
     //define event handlers
@@ -140,7 +138,6 @@
 
 </script>
 <div id="googleMap" style="width:500px;height:380px;"></div>
-
 @*@foreach (var trackingPeriod in Model.TrackingPeriods)
 {
     <div data-marker="@Json.Encode(trackingPeriod)"></div>
