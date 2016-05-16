@@ -37,6 +37,8 @@ namespace PoliceSystem.Models.Domain
         public Car()
         {
             this.Thefts = new List<Theftinfo>();
+            this.PastOwnerships = new List<Ownership>();
+            this.TrackingPeriods = new List<TrackingPeriod>();
         }
     }
 }

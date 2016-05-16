@@ -128,7 +128,16 @@ namespace PoliceSystem.Controllers
         public async Task<ActionResult> Test()
         {
             DriverCalls calls = new DriverCalls();
-            List<Driver> drivers = await calls.GetAllDrivers();
+            List<Driver> drivers = new List<Driver>();
+            try
+            {
+                 drivers = await calls.GetAllDrivers();
+            }
+            catch(Exception ex)
+            {
+                ModelState.AddModelError("", "Something went wrong. error: " + ex.Message);
+            }
+            
             return View(drivers);
         }
     }

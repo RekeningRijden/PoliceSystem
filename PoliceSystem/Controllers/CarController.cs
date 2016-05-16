@@ -88,7 +88,15 @@ namespace PoliceSystem.Controllers
             CarCalls Carcalls = new CarCalls();
             LocationCalls locationCalls = new LocationCalls();
             Car car = new Car() { LicencePlate = "44-DD-33", CarTrackerId = 9 };
-            car.TrackingPeriods = await locationCalls.GetAllTrackingPeriodsFor(car);
+            try
+            {
+                car.TrackingPeriods = await locationCalls.GetAllTrackingPeriodsFor(car);
+            }
+            catch(Exception ex)
+            {
+                ModelState.AddModelError("", "Something went wrong. Error: " + ex.Message);
+            }
+            
             return View(car);
         }
     }
