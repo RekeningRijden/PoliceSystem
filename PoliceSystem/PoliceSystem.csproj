@@ -766,7 +766,7 @@
     <Content Include="Views\Account\Register.cshtml" />
     <Content Include="Views\Shared\LeftMenu.cshtml" />
     <Content Include="Views\Account\Delete.cshtml" />
-    <Content Include="Views\Car\CarOverview.cshtml" />
+    <Content Include="Views\Car\Index.cshtml" />
     <Content Include="Views\Car\Car.cshtml" />
     <Content Include="Views\Car\Map.cshtml" />
   </ItemGroup>

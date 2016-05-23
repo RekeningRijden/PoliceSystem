@@ -5,10 +5,7 @@
 }
 <div class="row">
     <div class="col-xs-10 col-xs-offset-1">
-        @Html.ActionLink("Logout", "Logout", "Account", new { @class = "pull-right" })
-        <h2>Welcome @Html.LabelForModel(Model.Username)</h2>
-
-        @Html.ActionLink("Cars", "CarOverview", "Car")
+        @Html.ActionLink("Logout", "Logout", "Account")
     </div>
 </div>
 <br/>
@@ -16,7 +13,7 @@
 
 <div class="row">
     <div class="col-xs-6 col-md-4">
-        <a href="#" class="thumbnail">
+        <a href="@Url.Action("Index", "Car")" class="thumbnail">
             <div class="dark-image" data-content="Report car as stolen">
                 <img src="~/Content/img/stolencar.jpg" alt="StolenCar" />
             </div>
@@ -24,7 +21,7 @@
     </div>
 
     <div class="col-xs-6 col-md-4">
-        <a href="#" class="thumbnail">
+        <a href="@Url.Action("Map","Car")" class="thumbnail">
             <div class="dark-image" data-content="Track a stolen car">
                 <img src="~/Content/img/map.png" alt="Map" />
             </div>
@@ -34,7 +31,7 @@
     @if (User.IsInRole("admin"))
     {
         <div class="col-xs-6 col-md-4">
-            <a href="#" class="thumbnail">
+            <a href="@Url.Action("Index","Account")" class="thumbnail">
                 <div class="dark-image" data-content="Manage users">
                     <img src="~/Content/img/users.png" alt="Users" />
                 </div>
@@ -43,8 +40,3 @@
     }
     
 </div>
-
-
-
-
-

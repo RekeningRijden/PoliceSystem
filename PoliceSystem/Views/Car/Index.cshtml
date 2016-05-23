@@ -4,7 +4,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>CarOverview</h2>
+<h2>Search a car</h2>
 
 @using (Html.BeginForm())
 {
@@ -12,7 +12,7 @@
         <div class="col-xs-8 col-xs-offset-2">
             <div class="form-group">
                 <div class="input-group">
-                    @Html.TextBoxFor(model => model.Car.LicencePlate, new { @class = "form-control", autofocus = "true", required = "true" })
+                    @Html.TextBoxFor(model => model.Car.LicencePlate, new { @class = "form-control", autofocus = "true", required = "true", placeholder = "Search a licenceplate e.g. (44-DD-33)" })
 
                     <span class="input-group-btn">
                         <button class="btn btn-primary" type="submit">

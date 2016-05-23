@@ -14,7 +14,7 @@ namespace PoliceSystem.Controllers
     public class CarController : Controller
     {
 
-        public ActionResult CarOverview()
+        public ActionResult Index()
         {
             Car car = new Car();
             return View(new CarViewModel(car));
@@ -23,9 +23,9 @@ namespace PoliceSystem.Controllers
         // GET: Car
         public async Task<ActionResult> Car(string licencePlate)
         {
-            if (licencePlate == null || licencePlate.Equals(""))
+            if (licencePlate == null || licencePlate.Trim().Equals(""))
             {
-                return Redirect("CarOverview");
+                return Redirect("Index");
             }
             else
             {
@@ -52,7 +52,7 @@ namespace PoliceSystem.Controllers
         }
 
         [HttpPost]
-        public ActionResult CarOverview(CarViewModel carViewModel)
+        public ActionResult Index(CarViewModel carViewModel)
         {
             return RedirectToAction("Car", "Car", new { licencePlate = carViewModel.Car.LicencePlate });
         }
