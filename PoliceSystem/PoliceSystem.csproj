@@ -264,6 +264,10 @@
     <Content Include="Content\img\background.png" />
     <Content Include="Content\img\logo-small.png" />
     <Content Include="Content\img\logo.png" />
+    <Content Include="Content\img\manageusers.png" />
+    <Content Include="Content\img\map.png" />
+    <Content Include="Content\img\stolencar.jpg" />
+    <Content Include="Content\img\users.png" />
     <Content Include="Content\js\app.config.js" />
     <Content Include="Content\js\app.min.js" />
     <Content Include="Content\js\bootstrap-clockpicker.min.js" />
