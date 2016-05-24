@@ -1,48 +1,18 @@
-﻿@model PoliceSystem.Models.ViewModels.UserAccountViewModel
+﻿@model PoliceSystem.Models.Domain.User
 @{
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <h2>Index</h2>
 <h4>Logged in as:</h4>
-@Html.LabelForModel("Username: " + Model.User.Username)
+@Html.LabelForModel("Username: " + Model.Username)
 <br />
-@Html.LabelForModel("User ID: " + Model.User.Id)
+@Html.LabelForModel("User ID: " + Model.Id)
 <br />
-@Html.LabelForModel("Group: " + Model.User.UserGroup.Name)
+@Html.LabelForModel("Group: " + Model.UserGroup.Name)
 <br />
-<br/>
+<br />
 
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th>Id</th>
-            <th>Username</th>
-            <th>Role</th>
-            <th>Action</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var user in Model.Users)
-            {
-            <tr>
-                <td>@user.Id</td>
-                <td>@user.Username</td>
-                <td>@user.UserGroup.Name</td>
-                <td>
-                    @if (!user.UserGroup.Name.Equals("admin"))
-                {
-                        @Html.ActionLink("Delete", "Delete", new { id = @user.Id });
-                    }
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
-<br/>
 
-<p>What do you want to do?</p>
-- @Html.ActionLink("Register a new user", "Register")
-- @Html.ActionLink("API call to get all users", "Test");
 
 

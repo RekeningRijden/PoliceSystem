@@ -22,16 +22,17 @@ namespace PoliceSystem.Controllers
         {
             string username = HttpContext.User.Identity.Name;
             User user = userService.FindByUsername(username);
-            List<User> users = userService.getAllUsers();
-
-            //Use viewModel or Partial view for multiple models
-            var userAccountViewModel = new UserAccountViewModel(user, users);
-            return View(userAccountViewModel);
+            return View(user);
         }
 
         // Get: Login
         public ActionResult Login()
         {
+
+            if (User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Index", "Home");
+            }
             User user = new User();
             return View(user);
         }
@@ -44,13 +45,20 @@ namespace PoliceSystem.Controllers
             {
                 //Get user etc.
                 FormsAuthentication.SetAuthCookie(user.Username, false);
-                return Redirect("/Account/Index");
+                return RedirectToAction("Index", "Home");
             }
             else
             {
                 ModelState.AddModelError("", "De gebruikersnaam of het wachtwoord is incorrect.");
                 return View(user);
             }
+        }
+
+        [Authorize(Roles="admin")]
+        public ActionResult Manage()
+        {
+            List<User> users = userService.getAllUsers();
+            return View(users);
         }
 
         // Get: Register, only allowed for admin users
@@ -69,7 +77,7 @@ namespace PoliceSystem.Controllers
             try
             {
                 userService.Create(user);
-                return RedirectToAction("Index");
+                return RedirectToAction("Manage", "Account");
             }
             catch (InvalidOperationException ex)
             {
@@ -115,7 +123,7 @@ namespace PoliceSystem.Controllers
             try
             {
                 userService.Remove(user.Id);
-                return RedirectToAction("Index");
+                return RedirectToAction("Manage", "Account");
             }
             catch (InvalidOperationException ex)
             {

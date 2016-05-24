@@ -26,3 +26,7 @@
 .dark-image:hover:after {
     opacity:1;
 }
+
+.tablebackground {
+    background-color: #FFF !important;
+}

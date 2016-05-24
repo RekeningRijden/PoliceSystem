@@ -769,6 +769,7 @@
     <Content Include="Views\Car\Index.cshtml" />
     <Content Include="Views\Car\Car.cshtml" />
     <Content Include="Views\Car\Map.cshtml" />
+    <Content Include="Views\Account\Manage.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
