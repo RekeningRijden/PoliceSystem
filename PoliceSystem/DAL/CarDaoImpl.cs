@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Web;
+using PagedList;
 using PoliceSystem.Models.Domain;
 
 
@@ -60,6 +61,18 @@ namespace PoliceSystem.DAL
         {
             context.Cars.Remove(car);
             context.SaveChanges();
+        }
+
+        public IPagedList<Car> GetByPage(int pageNumber, string filter, PoliceDbContext context)
+        {
+            if (String.IsNullOrEmpty(filter))
+            {
+                return context.Cars.OrderBy(c => c.LicencePlate).ToPagedList(pageNumber, 15);
+            }
+            else
+            {
+                return context.Cars.OrderBy(c => c.LicencePlate).Where(c => c.LicencePlate.Contains(filter)).ToPagedList(pageNumber, 10);
+            }
         }
     }
 }

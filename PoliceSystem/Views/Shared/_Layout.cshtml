@@ -26,26 +26,23 @@
 </head>
 <body class="smart-style-1 minified" style="margin-right: 1px;">
     <div>
-            <div id="content">
-                @if (User.Identity.IsAuthenticated)
-                {
-                    <div class="row">
-                        <div class="col-md-1">
-                            @Html.ActionLink("Home", "Index", "Home", new object { }, new { @class = "btn btn-default" })
-                        </div>
-                        <div class="col-md-8"></div>
-                        <div class="col-md-2">
-                            @Html.ActionLink(User.Identity.Name, "Index", "Account", new object {}, new {@class = "btn btn-default", @style= "display:block;text-overflow:ellipsis;overflow:hidden;" })
-                        </div>
-                        <div class="col-md-1">
+        <div id="content">
+            @if (User.Identity.IsAuthenticated)
+            {
+                <div class="row">
+                    <div class="col-xs-12">
+                        @Html.ActionLink("Home", "Index", "Home", new object { }, new { @class = "btn btn-default pull-left" })
+                        <div class="btn-group pull-right">
+                            @Html.ActionLink(User.Identity.Name, "Index", "Account", new object { }, new { @class = "btn btn-default", @style = "display:block;text-overflow:ellipsis;overflow:hidden;" })
                             @Html.ActionLink("Logout", "Logout", "Account", new object { }, new { @class = "btn btn-danger" })
                         </div>
                     </div>
+                </div>
                     <br />
                     <br />
-                }
-                @RenderBody()
-            </div>
+            }
+            @RenderBody()
+        </div>
     </div>
 
     <!-- JQUERY-UI -->

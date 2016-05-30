@@ -1,4 +1,5 @@
-﻿using PoliceSystem.Models.Domain;
+﻿using PagedList;
+using PoliceSystem.Models.Domain;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -56,6 +57,14 @@ namespace PoliceSystem.DAL
             using (PoliceDbContext context = new PoliceDbContext())
             {
                 carDao.Remove(car, context);
+            }
+        }
+
+        public IPagedList<Car> GetByPage(int pageNumber, string filter)
+        {
+            using (PoliceDbContext context = new PoliceDbContext())
+            {
+                return carDao.GetByPage(pageNumber, filter, context);
             }
         }
     }

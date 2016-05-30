@@ -1,4 +1,5 @@
-﻿using PoliceSystem.Models.Domain;
+﻿using PagedList;
+using PoliceSystem.Models.Domain;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,5 +21,7 @@ namespace PoliceSystem.DAL
         bool CarExists(string licencePlate, PoliceDbContext context);
 
         void Remove(Car car, PoliceDbContext context);
+
+        IPagedList<Car> GetByPage(int pageNumber, string filter, PoliceDbContext context);
     }
 }

@@ -8,18 +8,12 @@ using System.Web;
 using System.Web.Mvc;
 using System.Threading.Tasks;
 using PoliceSystem.Api;
+using PagedList;
 
 namespace PoliceSystem.Controllers
 {
     public class CarController : Controller
     {
-
-        public ActionResult Index()
-        {
-            Car car = new Car();
-            return View(new CarViewModel(car));
-        }
-
         // GET: Car
         public async Task<ActionResult> Car(string licencePlate)
         {
@@ -40,11 +34,16 @@ namespace PoliceSystem.Controllers
                 else
                 {
                     car = await calCalls.GetCarWithLicencePlate(licencePlate);
-                    car.Id = 0;
-
-                    carService.Create(car);
+                    if (car != null)
+                    {
+                        car.Id = 0;
+                        carService.Create(car);
+                    }
+                    else
+                    {
+                        return RedirectToAction("Index", "Car", new { errorMessage = "Car with licenceplate: " + licencePlate + " does not exist" });
+                    }
                 }
-
                 car = await calCalls.FillCarWithData(car);
 
                 return View(new CarViewModel(car));
@@ -55,6 +54,33 @@ namespace PoliceSystem.Controllers
         public ActionResult Index(CarViewModel carViewModel)
         {
             return RedirectToAction("Car", "Car", new { licencePlate = carViewModel.Car.LicencePlate });
+        }
+
+        [HttpGet]
+        public ActionResult Index(string currentFilter, string searchString, int? page, string errorMessage)
+        {
+            if (!String.IsNullOrEmpty(errorMessage))
+            {
+                ModelState.AddModelError("", errorMessage);
+            }
+
+            if (searchString != null)
+            {
+                page = 1;
+            }
+            else
+            {
+                searchString = currentFilter;
+            }
+
+            ViewBag.CurrentFilter = searchString;
+
+            Car car = new Car();
+
+            int pageNumber = page ?? default(int);
+            pageNumber = pageNumber == 0 ? 1 : pageNumber;
+            IPagedList<Car> cars = new CarService().GetByPage(pageNumber, searchString);
+            return View(new CarViewModel(car, cars));
         }
 
         [HttpPost]
@@ -92,11 +118,11 @@ namespace PoliceSystem.Controllers
             {
                 car.TrackingPeriods = await locationCalls.GetAllTrackingPeriodsFor(car);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 ModelState.AddModelError("", "Something went wrong. Error: " + ex.Message);
             }
-            
+
             return View(car);
         }
     }

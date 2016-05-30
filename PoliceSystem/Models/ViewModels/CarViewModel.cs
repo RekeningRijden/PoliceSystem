@@ -1,4 +1,5 @@
-﻿using PoliceSystem.Models.Domain;
+﻿using PagedList;
+using PoliceSystem.Models.Domain;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,7 @@ namespace PoliceSystem.Models.ViewModels
     public class CarViewModel
     {
         public Car Car { get; set; }
-        public List<Car> Cars { get; set; }
+        public IPagedList<Car> Cars { get; set; }
         public Theftinfo Theftinfo { get; set; }
 
         public CarViewModel()
@@ -20,6 +21,12 @@ namespace PoliceSystem.Models.ViewModels
         public CarViewModel(Car car) : this()
         {
             this.Car = car;
+        }
+
+        public CarViewModel(Car car, IPagedList<Car> cars) : this()
+        {
+            this.Car = car;
+            this.Cars = cars;
         }
     }
 }

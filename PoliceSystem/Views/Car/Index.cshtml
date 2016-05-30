@@ -1,15 +1,18 @@
 ﻿@model PoliceSystem.Models.ViewModels.CarViewModel
+@using PagedList.Mvc;
 @{
     ViewBag.Title = "CarOverview";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Search a car</h2>
-
 @using (Html.BeginForm())
 {
     <div class="row">
         <div class="col-xs-8 col-xs-offset-2">
+            <h2>Search a car</h2>
+
+            @Html.ValidationSummary(true)
+
             <div class="form-group">
                 <div class="input-group">
                     @Html.TextBoxFor(model => model.Car.LicencePlate, new { @class = "form-control", autofocus = "true", required = "true", placeholder = "Search a licenceplate e.g. (44-DD-33)" })
@@ -21,6 +24,84 @@
                         </button>
                     </span>
                 </div>
+            </div>
+        </div>
+    </div>
+}
+@using (Html.BeginForm("Index", "Car", FormMethod.Get))
+{
+    <div class="row">
+        <div class="col-xs-8 col-xs-offset-2">
+            <legend>Stolen Cars</legend>
+
+            <div class="form-group">
+                <div class="input-group">
+                    @Html.TextBox("SearchString", ViewBag.CurrentFilter as string, new { @class = "form-control", placeholder = "Filter" })
+
+                    <span class="input-group-btn">
+                        <button class="btn btn-primary" type="submit">
+                            <i class="fa fa-search" />
+                            Filter
+                        </button>
+                    </span>
+                </div>
+            </div>
+            @if (Model.Cars.Count != 0)
+            {
+                <table class="table table-condensed table-bordered table-hover tablebackground">
+                    <thead>
+                        <tr>
+                            <th>LicencePlate</th>
+                            <th>Stolen</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var car in Model.Cars)
+                    {
+                            <tr>
+                                <td>@car.LicencePlate</td>
+                                <td>
+                                    @if (car.Stolen)
+                                    {
+                                        @Html.Label("Yes");
+                                    }
+                                    else
+                                    {
+                                        @Html.Label("No");
+                                    }
+                                </td>
+                                <td>
+                                    <div class="element-center">
+                                        @Html.ActionLink("Edit", "Car", new { licencePlate = car.LicencePlate }, new { @class = "btn btn-primary btn-xs" })
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            @if (Model.Cars.Count == 0)
+            {
+                <div class="alert alert-warning fade in">
+                    No cars found
+                </div>
+            }
+
+
+
+
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-8 col-xs-offset-2">
+            <div class="pull-left">
+                Page @(Model.Cars.PageCount < Model.Cars.PageNumber ? 0 : Model.Cars.PageNumber) of @Model.Cars.PageCount
+            </div>
+
+            <div class="pull-right" style="margin-top: -30px;">
+                @Html.PagedListPager(Model.Cars, page => Url.Action("Index",
+    new { page, currentFilter = ViewBag.CurrentFilter }))
             </div>
         </div>
     </div>
