@@ -50,15 +50,33 @@
                                 <td>@Model.Car.CurrentOwnership.Driver.GetFullName()</td>
                                 <td>@Model.Car.CurrentOwnership.Driver.Address.GetFullAddress()</td>
                                 <td>@Html.DisplayFor(model => model.Car.CurrentOwnership.StartDate)</td>
-                                <td>@Html.DisplayFor(model => model.Car.CurrentOwnership.EndDate)</td>
+                                <td>
+                                    @if (Model.Car.CurrentOwnership.EndDate == DateTime.MinValue)
+                                    {
+                                        @Html.Label("--")
+                                    }
+                                    else
+                                    {
+                                        @Html.DisplayFor(model => model.Car.CurrentOwnership.EndDate)
+                                    }
+                                </td>
                             </tr>
                             @foreach (var ownership in Model.Car.PastOwnerships)
                             {
                                 <tr>
                                     <td>@ownership.Driver.Firstname @ownership.Driver.Lastname</td>
                                     <td>@ownership.Driver.Address.Street @ownership.Driver.Address.StreetNr @ownership.Driver.Address.City</td>
-                                    <td>@ownership.StartDate</td>
-                                    <td>@ownership.EndDate</td>
+                                    <td>@Html.DisplayFor(model => ownership.StartDate)</td>
+                                    <td>
+                                        @if (ownership.EndDate == DateTime.MinValue)
+                                        {
+                                            @Html.Label("--")
+                                        }
+                                        else
+                                        {
+                                            @Html.DisplayFor(model => ownership.EndDate)
+                                        }
+                                    </td>
                                 </tr>
                             }
                         </tbody>
@@ -79,9 +97,18 @@
                             @foreach (var theftinfo in Model.Car.Thefts)
                             {
                                 <tr>
-                                    <td>@theftinfo.LastSeenDate</td>
+                                    <td>@Html.DisplayFor(model => theftinfo.LastSeenDate)</td>
                                     <td>@theftinfo.LastSeenLocation.GetFullAddress()</td>
-                                    <td>@theftinfo.CarFoundDate</td>
+                                    <td>
+                                        @if (theftinfo.CarFoundDate == DateTime.MinValue)
+                                        {
+                                            @Html.Label("--")
+                                        }
+                                        else
+                                        {
+                                            @Html.DisplayFor(model => theftinfo.CarFoundDate)
+                                        }
+                                    </td>
                                     <td>@theftinfo.CarFoundLocation.GetFullAddress()</td>
                                 </tr>
                             }

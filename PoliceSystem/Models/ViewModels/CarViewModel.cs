@@ -28,5 +28,6 @@ namespace PoliceSystem.Models.ViewModels
             this.Car = car;
             this.Cars = cars;
         }
+        
     }
 }
