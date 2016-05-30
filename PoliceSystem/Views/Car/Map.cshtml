@@ -14,7 +14,14 @@
         var mapProp = {
             center: new google.maps.LatLng(40.50624820202864, -8.032760983386718),
             zoom: 7,
-            mapTypeId: google.maps.MapTypeId.ROADMAP
+            mapTypeId: google.maps.MapTypeId.ROADMAP,
+            panControl:true,
+            zoomControl:true,
+            mapTypeControl:true,
+            scaleControl:false,
+            streetViewControl:false,
+            overviewMapControl:false,
+            rotateControl:true,
         };
         map = new google.maps.Map(document.getElementById("googleMap"), mapProp);
 
@@ -71,8 +78,8 @@
 
     google.maps.event.addDomListener(window, 'load', initialize);
 
-    //var wsUri = "ws://192.168.1.111:8080/MovementSystem/socket/example-PathParameter-value";
-    var wsUri = "ws://movement.s63a.marijn.ws/socket";
+    var wsUri = "ws://192.168.1.113:8080/MovementSystem/socket/example-PathParameter-value";
+    //var wsUri = "ws://movement.s63a.marijn.ws/socket";
     var output;
     function init() {
         output = document.getElementById("output");
@@ -94,8 +101,8 @@
     //define event handlers
     function onOpen(evt) {
         writeToScreen("CONNECTED");
-
-        doSend(@Model.CarTrackerId);
+        var message = {cartrackerId: @Model.CarTrackerId, isStartSession: true};
+        doSend(message);
     }
     function onWindowClose(evt) {
         websocket.close();
@@ -108,17 +115,17 @@
         //convert json to javascript object
         var message = JSON.parse(evt.data);
         //write message.text to screen
-        
+
         writeToScreen('<span style="color: green;">RECEIVED, ' + JSON.stringify(message) + ' </span>');
         if (message.trackingPeriod != null) {
             createNewMarkers(message);
         }
-        
+
     }
 
     function doSend(message) {
-        writeToScreen("SENT: " + message);
-        var json = "{trackerId: " + null + ", trackingPeriod:" + null + ", initTrackerId: " + message + "}";
+        writeToScreen("SENT: " + JSON.stringify(message));
+        var json = "{trackerId: " + message.cartrackerId + ", trackingPeriod:" + null + ", startSession: " + message.isStartSession+ "}";
         websocket.send(json);
     }
 
@@ -134,16 +141,45 @@
         output.appendChild(pre);
     }
 
+    function startlivetracking() {
+        var message = {cartrackerId: @Model.CarTrackerId, isStartSession: true};
+        doSend(message);
+    }
+
+    function stoplivetracking() {
+        var message = {cartrackerId: @Model.CarTrackerId, isStartSession: false};
+        doSend(message);
+    }
+
     //invoke init() on load
     window.addEventListener("load", init, false);
 
 
 </script>
+<div class="form-group">
+    <div class="input-group">
+        @Html.TextBoxFor(model => model.LicencePlate, new { @class = "form-control", autofocus = "true", required = "true", placeholder = "Search a licenceplate e.g. (44-DD-33)" })
+        <span class="input-group-btn">
+            <button class="btn btn-primary" type="submit">
+                <i class="fa fa-search" />
+                Find
+            </button>
+        </span>
+    </div>
+</div>
+<div class="row">
+    <div class="col-xs-12">
+        <button class="btn btn-primary" onclick="startlivetracking()">Live</button>
+        <br />
+        <button class="btn btn-primary" onclick="stoplivetracking()">History</button>
+    </div>
+</div>
+
 <div id="googleMap" style="width:500px;height:380px;"></div>
 @*@foreach (var trackingPeriod in Model.TrackingPeriods)
-{
-    <div data-marker="@Json.Encode(trackingPeriod)"></div>
-}*@
+    {
+        <div data-marker="@Json.Encode(trackingPeriod)"></div>
+    }*@
 
 <div id="output" />
 
