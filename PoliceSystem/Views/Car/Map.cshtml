@@ -1,4 +1,4 @@
-﻿@model PoliceSystem.Models.Domain.Car
+﻿@model PoliceSystem.Models.ViewModels.MapViewModel
 @{
     ViewBag.Title = "Map";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -77,8 +77,8 @@
 
     google.maps.event.addDomListener(window, 'load', initialize);
 
-    var wsUri = "ws://145.93.129.99:8080/MovementSystem/socket/example-PathParameter-value";
-    //var wsUri = "ws://movement.s63a.marijn.ws/socket";
+    //var wsUri = "ws://145.93.129.99:8080/MovementSystem/socket/example-PathParameter-value";
+    var wsUri = "ws://movement.s63a.marijn.ws/socket";
     var output;
     function init() {
         output = document.getElementById("output");
@@ -100,7 +100,7 @@
     //define event handlers
     function onOpen(evt) {
         writeToScreen("CONNECTED");
-        var message = {cartrackerId: @Model.CarTrackerId, isStartSession: true};
+        var message = {cartrackerId: @Model.Car.CarTrackerId, isStartSession: true};
         doSend(message);
     }
     function onWindowClose(evt) {
@@ -141,12 +141,12 @@
     }
 
     function startlivetracking() {
-        var message = {cartrackerId: @Model.CarTrackerId, isStartSession: true};
+        var message = {cartrackerId: @Model.Car.CarTrackerId, isStartSession: true};
         doSend(message);
     }
 
     function stoplivetracking() {
-        var message = {cartrackerId: @Model.CarTrackerId, isStartSession: false};
+        var message = {cartrackerId: @Model.Car.CarTrackerId, isStartSession: false};
         doSend(message);
     }
 
@@ -159,7 +159,7 @@
 {
     <div class="form-group">
         <div class="input-group">
-            @Html.TextBoxFor(model => model.LicencePlate, new { @class = "form-control", autofocus = "true", required = "true", placeholder = "Search a licenceplate e.g. (44-DD-33)" })
+            @Html.TextBoxFor(model => model.Car.LicencePlate, new { @class = "form-control", autofocus = "true", required = "true", placeholder = "Search a licenceplate e.g. (44-DD-33)" })
             <span class="input-group-btn">
                 <button class="btn btn-primary" type="submit">
                     <i class="fa fa-search" />
@@ -169,11 +169,33 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-xs-12">
-            <button class="btn btn-primary" onclick="startlivetracking()">Live</button>
-            <br />
-            <button class="btn btn-primary" onclick="stoplivetracking()">History</button>
+        <div class="col-xs-8">
+            <div class="row">
+                <div class="col-xs-6 ">
+                    <div class="form-group">
+                        <label class="control-label">Start</label>
+                        @Html.TextBoxFor(model => model.Start, new { @class = "datepicker form-control" })
+                    </div>
+                </div>
+                <div class="col-xs-6">
+                    <div class="form-group">
+                        <label class="control-label">End</label>
+                        <div class="input-group">
+                            @Html.TextBoxFor(model => model.End, new { @class = "datepicker form-control" })
+
+                            <span class="input-group-btn">
+                                <button class="btn btn-primary" onclick="stoplivetracking()">History</button>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
+        <div class="col-xs-4">
+            <button class="btn btn-primary pull-right" style="margin-top: 25px;" onclick="startlivetracking()">Live</button>
+        </div>
+        <br />
     </div>
 
     <div id="googleMap" style="width:500px;height:380px;"></div>
