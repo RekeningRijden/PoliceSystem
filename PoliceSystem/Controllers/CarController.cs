@@ -109,18 +109,27 @@ namespace PoliceSystem.Controllers
             return RedirectToAction("Car", "Car", new { licencePlate = car.LicencePlate });
         }
 
-        public async Task<ActionResult> Map()
+        [HttpGet]
+        public async Task<ActionResult> Map(Car car)
         {
-            CarCalls Carcalls = new CarCalls();
+
             LocationCalls locationCalls = new LocationCalls();
-            Car car = new Car() { LicencePlate = "11-22-AA", CarTrackerId = 1 };
-            try
+            if (car.LicencePlate == null)
             {
-                car.TrackingPeriods = await locationCalls.GetAllTrackingPeriodsFor(car);
+                car = new Car() { LicencePlate = "11-22-AA", CarTrackerId = 300000 };
             }
-            catch (Exception ex)
+            else
             {
-                ModelState.AddModelError("", "Something went wrong. Error: " + ex.Message);
+                try
+                {
+                    CarCalls carcalls = new CarCalls();
+                    car = await carcalls.GetCarWithLicencePlate(car.LicencePlate);
+                    car.TrackingPeriods = await locationCalls.GetAllTrackingPeriodsFor(car);
+                }
+                catch (Exception ex)
+                {
+                    ModelState.AddModelError("", "Something went wrong. Error: " + ex.Message);
+                }
             }
 
             return View(car);
