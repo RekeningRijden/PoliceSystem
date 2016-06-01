@@ -113,21 +113,21 @@ namespace PoliceSystem.Controllers
         }
         
         [HttpGet]
-        public async Task<ActionResult> Map(Car car)
+        public async Task<ActionResult> Map(MapViewModel mapViewModel)
         {
 
             LocationCalls locationCalls = new LocationCalls();
-            if (car.LicencePlate == null)
+            if (mapViewModel.Car == null)
             {
-                car = new Car() { LicencePlate = "11-22-AA", CarTrackerId = 300000 };
+                mapViewModel.Car = new Car() { LicencePlate = "11-22-AA", CarTrackerId = 300000 };
             }
             else
             {
                 try
                 {
                     CarCalls carcalls = new CarCalls();
-                    car = await carcalls.GetCarWithLicencePlate(car.LicencePlate);
-                    car.TrackingPeriods = await locationCalls.GetAllTrackingPeriodsFor(car);
+                    mapViewModel.Car = await carcalls.GetCarWithLicencePlate(mapViewModel.Car.LicencePlate);
+                    mapViewModel.Car.TrackingPeriods = await locationCalls.GetAllTrackingPeriodsFor(mapViewModel.Car);
                 }
                 catch (Exception ex)
                 {
@@ -135,7 +135,7 @@ namespace PoliceSystem.Controllers
                 }
             }
 
-            return View(car);
+            return View(mapViewModel);
         }
     }
 }
