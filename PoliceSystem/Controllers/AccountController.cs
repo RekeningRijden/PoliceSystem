@@ -131,22 +131,5 @@ namespace PoliceSystem.Controllers
                 return RedirectToAction("Delete", new { errorMessage = ex.Message });
             }
         }
-
-        //Needs to be async all the way to the controller otherwise a thread deadlock will occur
-        public async Task<ActionResult> Test()
-        {
-            DriverCalls calls = new DriverCalls();
-            List<Driver> drivers = new List<Driver>();
-            try
-            {
-                 drivers = await calls.GetAllDrivers();
-            }
-            catch(Exception ex)
-            {
-                ModelState.AddModelError("", "Something went wrong. error: " + ex.Message);
-            }
-            
-            return View(drivers);
-        }
     }
 }

@@ -12,9 +12,45 @@ using PagedList;
 
 namespace PoliceSystem.Controllers
 {
+    [Authorize]
     public class CarController : Controller
     {
+        
+        [HttpGet]
+        public ActionResult Index(string currentFilter, string searchString, int? page, string errorMessage)
+        {
+            if (!String.IsNullOrEmpty(errorMessage))
+            {
+                ModelState.AddModelError("", errorMessage);
+            }
+
+            if (searchString != null)
+            {
+                page = 1;
+            }
+            else
+            {
+                searchString = currentFilter;
+            }
+
+            ViewBag.CurrentFilter = searchString;
+
+            Car car = new Car();
+
+            int pageNumber = page ?? default(int);
+            pageNumber = pageNumber == 0 ? 1 : pageNumber;
+            IPagedList<Car> cars = new CarService().GetByPage(pageNumber, searchString);
+            return View(new CarViewModel(car, cars));
+        }
+
+        [HttpPost]
+        public ActionResult Index(CarViewModel carViewModel)
+        {
+            return RedirectToAction("Car", "Car", new { licencePlate = carViewModel.Car.LicencePlate });
+        }
+
         // GET: Car
+        [HttpGet]
         public async Task<ActionResult> Car(string licencePlate)
         {
             if (licencePlate == null || licencePlate.Trim().Equals(""))
@@ -51,39 +87,6 @@ namespace PoliceSystem.Controllers
         }
 
         [HttpPost]
-        public ActionResult Index(CarViewModel carViewModel)
-        {
-            return RedirectToAction("Car", "Car", new { licencePlate = carViewModel.Car.LicencePlate });
-        }
-
-        [HttpGet]
-        public ActionResult Index(string currentFilter, string searchString, int? page, string errorMessage)
-        {
-            if (!String.IsNullOrEmpty(errorMessage))
-            {
-                ModelState.AddModelError("", errorMessage);
-            }
-
-            if (searchString != null)
-            {
-                page = 1;
-            }
-            else
-            {
-                searchString = currentFilter;
-            }
-
-            ViewBag.CurrentFilter = searchString;
-
-            Car car = new Car();
-
-            int pageNumber = page ?? default(int);
-            pageNumber = pageNumber == 0 ? 1 : pageNumber;
-            IPagedList<Car> cars = new CarService().GetByPage(pageNumber, searchString);
-            return View(new CarViewModel(car, cars));
-        }
-
-        [HttpPost]
         public ActionResult Car(CarViewModel carViewModel)
         {
 
@@ -108,7 +111,7 @@ namespace PoliceSystem.Controllers
 
             return RedirectToAction("Car", "Car", new { licencePlate = car.LicencePlate });
         }
-
+        
         [HttpGet]
         public async Task<ActionResult> Map(Car car)
         {
