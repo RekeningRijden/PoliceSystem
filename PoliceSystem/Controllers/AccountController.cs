@@ -16,7 +16,7 @@ namespace PoliceSystem.Controllers
     {
         private UserService userService = new UserService();
 
-        // GET: Account
+        // GET: Account.
         [Authorize]
         public ActionResult Index()
         {
@@ -25,7 +25,7 @@ namespace PoliceSystem.Controllers
             return View(user);
         }
 
-        // Get: Login
+        // Get: Login.
         public ActionResult Login()
         {
 
@@ -37,7 +37,7 @@ namespace PoliceSystem.Controllers
             return View(user);
         }
 
-        // Post: Login
+        // Post: Login.
         [HttpPost]
         public ActionResult Login(User user)
         {
@@ -61,7 +61,7 @@ namespace PoliceSystem.Controllers
             return View(users);
         }
 
-        // Get: Register, only allowed for admin users
+        // Get: Register, only allowed for admin users.
         [Authorize(Roles = "admin")]
         public ActionResult Register()
         {
@@ -69,7 +69,7 @@ namespace PoliceSystem.Controllers
             return View(user);
         }
 
-        // Post: Register, only allowed for admin users
+        // Post: Register, only allowed for admin users.
         [Authorize(Roles = "admin")]
         [HttpPost]
         public ActionResult Register(User user)
@@ -86,24 +86,24 @@ namespace PoliceSystem.Controllers
             }
         }
 
-        // Get: Logout
+        // Get: Logout.
         public ActionResult Logout()
         {
             FormsAuthentication.SignOut();
             return Redirect("/Account/Login");
         }
 
-        // Get: Delete, only allowed for admin users
+        // Get: Delete, only allowed for admin users.
         [Authorize(Roles = "admin")]
         public ActionResult Delete(int? id, string errorMessage)
         {
-            // If the user could not be deleted from the db in [Post] Delete an error message is set
+            // If the user could not be deleted from the db in [Post] Delete an error message is set.
             if (errorMessage != null)
             {
                 ModelState.AddModelError("", errorMessage);
             }
 
-            // If the user directly navigates to this action without an user id to delete
+            // If the user directly navigates to this action without an user id to delete.
             if (id == null)
             {
                 ModelState.AddModelError("", "No user selected to delete");
@@ -115,7 +115,7 @@ namespace PoliceSystem.Controllers
 
         }
 
-        // Post: Delete, only allowed for admin users
+        // Post: Delete, only allowed for admin users.
         [Authorize(Roles = "admin")]
         [HttpPost]
         public ActionResult Delete(User user)
@@ -127,7 +127,7 @@ namespace PoliceSystem.Controllers
             }
             catch (InvalidOperationException ex)
             {
-                //If the user could not be deleted from the database, the reason is displayed in the [Get] Delete view
+                //If the user could not be deleted from the database, the reason is displayed in the [Get] Delete view.
                 return RedirectToAction("Delete", new { errorMessage = ex.Message });
             }
         }

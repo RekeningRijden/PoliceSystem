@@ -20,7 +20,7 @@ namespace PoliceSystem.DAL
                 }
                 else
                 {
-                    //laat de gebruiker weten dat de username bezet is
+                    // Laat de gebruiker weten dat de username bezet is.
                 }
 
             }

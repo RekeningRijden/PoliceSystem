@@ -77,7 +77,7 @@ namespace PoliceSystem.Controllers
                     }
                     else
                     {
-                        return RedirectToAction("Index", "Car", new { errorMessage = "Car with licenceplate: " + licencePlate + " does not exist" });
+                        return RedirectToAction("Index", "Car", new { errorMessage = "Car with license plate: " + licencePlate + " does not exist" });
                     }
                 }
                 car = await calCalls.FillCarWithData(car);
