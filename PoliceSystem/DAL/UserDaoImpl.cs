@@ -23,7 +23,7 @@ namespace PoliceSystem.DAL
             }
             else
             {
-                //laat de gebruiker weten dat de username bezet is
+                // Laat de gebruiker weten dat de username bezet is.
                 throw new InvalidOperationException("Username already exists");
             }
         }
@@ -43,14 +43,14 @@ namespace PoliceSystem.DAL
                     throw new InvalidOperationException("Cannot delete admin account");
                 }
 
-                //context.Users.Attach(user);
+                // Context.Users.Attach(user);
                 context.Users.Remove(user);
                 context.SaveChanges();
             }
 
             else
             {
-                //User doesnt exists.
+                // User doesnt exists.
                 throw new InvalidOperationException("User with username: " + user.Username + " does not exist");
             }
         }
@@ -63,11 +63,11 @@ namespace PoliceSystem.DAL
             }
             catch (ArgumentNullException ex)
             {
-                //Zero or more than one users found
+                // Zero or more than one users found.
             }
             catch (InvalidOperationException ex)
             {
-                //Zero or more than one users found
+                // Zero or more than one users found.
             }
             return null;
         }
@@ -80,11 +80,11 @@ namespace PoliceSystem.DAL
             }
             catch (ArgumentNullException ex)
             {
-                //Zero or more than one users found
+                // Zero or more than one users found.
             }
             catch (InvalidOperationException ex)
             {
-                //Zero or more than one users found
+                // Zero or more than one users found.
             }
             return null;
         }

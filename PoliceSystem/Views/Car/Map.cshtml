@@ -123,7 +123,7 @@
         };
     }
 
-    //define event handlers
+    // Define event handlers.
     function onOpen(evt) {
     }
     function onWindowClose(evt) {
@@ -135,9 +135,9 @@
     }
 
     function onMessage(evt) {
-        //convert json to javascript object
+        // Convert json to javascript object.
         var message = JSON.parse(evt.data);
-        //write message.text to screen
+        // Write message.text to screen
 
         if (message.trackingPeriod != null) {
             var trackingPeriod = convertModel(message.trackingPeriod);
@@ -154,7 +154,7 @@
         alert('Could not get live information');
     }
 
-    //appends text to #output
+    // Appends text to #output.
     function writeToScreen(text) {
         var pre = document.createElement("p");
         pre.style.wordWrap = "break-word";
@@ -275,7 +275,7 @@
         return false;
     }
 
-    //invoke init() on load
+    // Invoke init() on load.
     window.addEventListener("load", init, false);
     google.maps.event.addDomListener(window, 'load', initialize);
 
