@@ -9,13 +9,14 @@ using System.Web.Mvc;
 using System.Threading.Tasks;
 using PoliceSystem.Api;
 using PagedList;
+using System.Net;
 
 namespace PoliceSystem.Controllers
 {
     [Authorize]
     public class CarController : Controller
     {
-        
+
         [HttpGet]
         public ActionResult Index(string currentFilter, string searchString, int? page, string errorMessage)
         {
@@ -53,7 +54,7 @@ namespace PoliceSystem.Controllers
         [HttpGet]
         public async Task<ActionResult> Car(string licencePlate)
         {
-            if (licencePlate == null || licencePlate.Trim().Equals(""))
+            if (string.IsNullOrEmpty(licencePlate))
             {
                 return Redirect("Index");
             }
@@ -63,13 +64,22 @@ namespace PoliceSystem.Controllers
                 CarCalls calCalls = new CarCalls();
 
                 Car car;
+                string errormessage = "Car with licenceplate: " + licencePlate + " does not exist";
                 if (carService.CarExists(licencePlate))
                 {
-                    car = carService.FindByLicencePlate(licencePlate);
+                    car = carService.FindByLicencePlate(licencePlate, true);
                 }
                 else
                 {
-                    car = await calCalls.GetCarWithLicencePlate(licencePlate);
+                    try
+                    {
+                        car = await calCalls.GetCarWithLicencePlate(licencePlate);
+                    }
+                    catch (WebException ex)
+                    {
+                        car = null;
+                        errormessage = ex.Message;
+                    }
                     if (car != null)
                     {
                         car.Id = 0;
@@ -77,10 +87,18 @@ namespace PoliceSystem.Controllers
                     }
                     else
                     {
-                        return RedirectToAction("Index", "Car", new { errorMessage = "Car with licenceplate: " + licencePlate + " does not exist" });
+                        return RedirectToAction("Index", "Car", new { errorMessage = errormessage });
                     }
                 }
-                car = await calCalls.FillCarWithData(car);
+                try
+                {
+                    car = await calCalls.FillCarWithData(car);
+                }
+                catch(WebException ex)
+                {
+                    return RedirectToAction("Index", "Car", new { errorMessage = ex.Message });
+                }
+                
 
                 return View(new CarViewModel(car));
             }
@@ -111,31 +129,47 @@ namespace PoliceSystem.Controllers
 
             return RedirectToAction("Car", "Car", new { licencePlate = car.LicencePlate });
         }
-        
+
         [HttpGet]
-        public async Task<ActionResult> Map(MapViewModel mapViewModel)
+        public ActionResult Map()
         {
+            //if (mapViewModel.Car == null)
+            //{
+            //    mapViewModel.Car = new Car();
+            //}
+            //else
+            //{
+            //    try
+            //    {
+            //        LocationCalls locationCalls = new LocationCalls();
+            //        CarCalls carcalls = new CarCalls();
+            //        mapViewModel.Car = await carcalls.GetCarWithLicencePlate(mapViewModel.Car.LicencePlate);
+            //        mapViewModel.Car.TrackingPeriods = await locationCalls.GetAllTrackingPeriodsFor(mapViewModel.Car);
+            //    }
+            //    catch (Exception ex)
+            //    {
+            //        ModelState.AddModelError("", ex.Message);
+            //    }
+            //}
 
+            //return View(mapViewModel);
+            return View();
+        }
+
+        [HttpGet]
+        public ActionResult GetCarWithLicenceplate(string licenceplate)
+        {
+            CarService carservice = new CarService();
+            Car car = carservice.FindByLicencePlate(licenceplate, false);
+            return Json(car, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> GetLocationsFromCarWithingPeriod(int cartrackerId, string startDate, string endDate)
+        {
             LocationCalls locationCalls = new LocationCalls();
-            if (mapViewModel.Car == null)
-            {
-                mapViewModel.Car = new Car() { LicencePlate = "11-22-AA", CarTrackerId = 300000 };
-            }
-            else
-            {
-                try
-                {
-                    CarCalls carcalls = new CarCalls();
-                    mapViewModel.Car = await carcalls.GetCarWithLicencePlate(mapViewModel.Car.LicencePlate);
-                    mapViewModel.Car.TrackingPeriods = await locationCalls.GetAllTrackingPeriodsFor(mapViewModel.Car);
-                }
-                catch (Exception ex)
-                {
-                    ModelState.AddModelError("", "Something went wrong. Error: " + ex.Message);
-                }
-            }
-
-            return View(mapViewModel);
+            List<TrackingPeriod> trackingPeriods = await locationCalls.GetTrackingPeriodsForCarWithinPeriod(cartrackerId, startDate, endDate);
+            return Json(trackingPeriods, JsonRequestBehavior.AllowGet);
         }
     }
 }

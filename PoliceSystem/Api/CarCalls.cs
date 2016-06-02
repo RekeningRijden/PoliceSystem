@@ -45,7 +45,7 @@ namespace PoliceSystem.Api
                 {
                     System.Diagnostics.Debug.WriteLine("Something went wrong with the API call. Status code: " + response.StatusCode);
                 }
-                throw new WebException("Something went wrong with the API call. Status code: " + response.StatusCode);
+                throw new WebException("Could not reach the server. Status code: " + response.StatusCode);
             }
         }
 
@@ -69,7 +69,7 @@ namespace PoliceSystem.Api
                 {
                     System.Diagnostics.Debug.WriteLine("Something went wrong with the API call. Status code: " + response.StatusCode);
                 }
-                throw new WebException("Something went wrong with the API call. Status code: " + response.StatusCode);
+                throw new WebException("Could not reach the server. Status code: " + response.StatusCode);
             }
         }
     }

@@ -44,12 +44,18 @@ namespace PoliceSystem.DAL
                 .Single(c => c.Id == id);
         }
 
-        public Car FindByLicencePlate(string licencePlate, PoliceDbContext context)
+        public Car FindByLicencePlate(string licencePlate, PoliceDbContext context, bool withThefts)
         {
-            return context.Cars.Include(c => c.Thefts.Select(t => t.CarFoundLocation))
-                .Include(c => c.Thefts.Select(t => t.LastSeenLocation))
-
-                .Single(c => c.LicencePlate == licencePlate);
+            if (withThefts)
+            {
+                return context.Cars.Include(c => c.Thefts.Select(t => t.CarFoundLocation))
+                    .Include(c => c.Thefts.Select(t => t.LastSeenLocation))
+                    .SingleOrDefault(c => c.LicencePlate == licencePlate);
+            }
+            else
+            {
+                return context.Cars.SingleOrDefault(c => c.LicencePlate == licencePlate);
+            }
         }
 
         public bool CarExists(string licencePlate, PoliceDbContext context)

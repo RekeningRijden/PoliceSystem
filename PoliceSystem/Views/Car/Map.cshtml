@@ -1,56 +1,86 @@
-﻿@model PoliceSystem.Models.ViewModels.MapViewModel
-@{
+﻿@{
     ViewBag.Title = "Map";
     Layout = "~/Views/Shared/_Layout.cshtml";
-    Html.ValidationSummary(true);
-}
 
+}
 <h2>Map</h2>
 <script src="http://maps.googleapis.com/maps/api/js"></script>
 <script>
+    //============================================================= Google Maps ==================================================
     var map;
+    var currentCar;
+    var markers = [];
+    var myTrip = [];
+    var flightPath;
+
     function initialize() {
         var mapProp = {
             center: new google.maps.LatLng(40.50624820202864, -8.032760983386718),
             zoom: 7,
             mapTypeId: google.maps.MapTypeId.ROADMAP,
-            panControl:true,
-            zoomControl:true,
-            mapTypeControl:true,
-            scaleControl:false,
-            streetViewControl:false,
-            overviewMapControl:false,
-            rotateControl:true,
+            panControl: true,
+            zoomControl: true,
+            mapTypeControl: true,
+            scaleControl: false,
+            streetViewControl: false,
+            overviewMapControl: false,
+            rotateControl: true,
+            scrollwheel: false
         };
         map = new google.maps.Map(document.getElementById("googleMap"), mapProp);
+    }
 
-        var myTrip = [];
-        $('[data-marker]').each(function () {
-            var data = $(this).data('marker');
+    function clearGoogleMap() {
+        for (var i = 0; i < markers.length; i++) {
+            markers[i].setMap(null);
+        }
+
+        if (flightPath) {
+            flightPath.setMap(null);
+        }
+
+        markers = [];
+        myTrip = [];
+        flightPath = null;
+    }
+
+    function createMarker(trackingPeriod, shouldAnimate) {
+        var marker;
+        var marker = new google.maps.Marker({
+            position: new google.maps.LatLng(trackingPeriod.Positions[0].Latitude, trackingPeriod.Positions[0].Longitude)
+        });
+        if (shouldAnimate) {
+            marker.setAnimation(google.maps.Animation.DROP);
+        }
+        
+        var endTrackingDate = ToJavaScriptDate(trackingPeriod.FinishedTracking);
+        var infowindow = new google.maps.InfoWindow({
+            content: "Checkpoint: " + endTrackingDate
+        });
+
+        google.maps.event.addListener(marker, 'click', function () {
+            infowindow.open(map, marker);
+        });
+
+        markers.push(marker);
+        map.panTo(marker.getPosition());
+        marker.setMap(map);
+    }
+
+    function drawHistoryOnMap(trackingPeriods) {
+        clearGoogleMap();
+        for (var x = 0; x < trackingPeriods.length; x++) {
+            var data = trackingPeriods[x];
 
             for (var i = 0; i < data.Positions.length; i++) {
                 var latlong = new google.maps.LatLng(data.Positions[i].Latitude, data.Positions[i].Longitude);
                 myTrip.push(latlong);
             }
 
-            var marker = new google.maps.Marker({
-                position: new google.maps.LatLng(data.Positions[0].Latitude, data.Positions[0].Longitude),
-            });
+            createMarker(data, false);
+        }
 
-            marker.setMap(map);
-
-            var endTrackingDate = ToJavaScriptDate(data.FinishedTracking);
-            var infowindow = new google.maps.InfoWindow({
-
-                content: "Checkpoint: " + endTrackingDate
-            });
-
-            google.maps.event.addListener(marker, 'click', function () {
-                infowindow.open(map, marker);
-            });
-        });
-
-        var flightPath = new google.maps.Polyline({
+        flightPath = new google.maps.Polyline({
             path: myTrip,
             strokeColor: "#0000FF",
             strokeOpacity: 0.8,
@@ -66,21 +96,17 @@
         return dt.getDate() + "-" + (dt.getMonth() + 1) + "-" + dt.getFullYear() + " (" + dt.getHours() + ":" + dt.getMinutes() + ":" + dt.getSeconds() + ")";
     }
 
-    function createNewMarkers(message) {
-        var marker = new google.maps.Marker({
-            position: new google.maps.LatLng(message.trackingPeriod.positions[0].latitude, message.trackingPeriod.positions[0].longitude),
-            animation: google.maps.Animation.DROP
-        });
-        map.panTo(marker.getPosition());
-        marker.setMap(map);
-    }
-
-    google.maps.event.addDomListener(window, 'load', initialize);
-
+    //============================================================= Websocket Functions ==================================================
     //var wsUri = "ws://145.93.129.99:8080/MovementSystem/socket/example-PathParameter-value";
     var wsUri = "ws://movement.s63a.marijn.ws/socket";
     var output;
     function init() {
+        var today = new Date();
+        var yesterday = new Date(today);
+        yesterday.setDate(today.getDate() - 1);
+        document.getElementById('startdate').value = yesterday.getDate() + '.' + (yesterday.getMonth()+1) + '.' + yesterday.getFullYear();
+        document.getElementById('enddate').value = today.getDate() + '.' + (today.getMonth() +1) + '.' + today.getFullYear();
+
         output = document.getElementById("output");
         websocket = new WebSocket(wsUri);
         websocket.onopen = function (evt) {
@@ -99,15 +125,13 @@
 
     //define event handlers
     function onOpen(evt) {
-        writeToScreen("CONNECTED");
-        var message = {cartrackerId: @Model.Car.CarTrackerId, isStartSession: true};
-        doSend(message);
     }
     function onWindowClose(evt) {
         websocket.close();
     }
     function onClose(evt) {
-        writeToScreen("DISCONNECTED");
+        console.log(JSON.stringify(evt));
+        setTimeout(function () { init() }, 5000);
     }
 
     function onMessage(evt) {
@@ -115,21 +139,19 @@
         var message = JSON.parse(evt.data);
         //write message.text to screen
 
-        writeToScreen('<span style="color: green;">RECEIVED, ' + JSON.stringify(message) + ' </span>');
         if (message.trackingPeriod != null) {
-            createNewMarkers(message);
+            var trackingPeriod = convertModel(message.trackingPeriod);
+            createMarker(trackingPeriod, true);
         }
-
     }
 
     function doSend(message) {
-        writeToScreen("SENT: " + JSON.stringify(message));
-        var json = "{trackerId: " + message.cartrackerId + ", trackingPeriod:" + null + ", startSession: " + message.isStartSession+ "}";
+        var json = "{trackerId: " + message.cartrackerId + ", trackingPeriod:" + null + ", startSession: " + message.isStartSession + "}";
         websocket.send(json);
     }
 
     function onError(event) {
-        writeToScreen('<span style="color: red;">ERROR:</span> ' + event.data);
+        alert('Could not get live information');
     }
 
     //appends text to #output
@@ -140,69 +162,166 @@
         output.appendChild(pre);
     }
 
-    function startlivetracking() {
-        var message = {cartrackerId: @Model.Car.CarTrackerId, isStartSession: true};
-        doSend(message);
+    function convertModel(trackingPeriod) {
+        var tempPeriod = new Object();
+        tempPeriod.Positions = [];
+        for (var i = 0; i < trackingPeriod.positions.length; i++) {
+            tempPeriod.Positions.push({ Latitude: trackingPeriod.positions[i].latitude, Longitude: trackingPeriod.positions[i].longitude, Date:  trackingPeriod.positions[i].date});
+        }
+        tempPeriod.FinishedTracking = '/Date('+ new Date(trackingPeriod.finishedTracking).getTime()+')/';
+        tempPeriod.SerialNumber = trackingPeriod.serialNumber;
+        trackingPeriod = null;
+        return tempPeriod;
     }
 
-    function stoplivetracking() {
-        var message = {cartrackerId: @Model.Car.CarTrackerId, isStartSession: false};
-        doSend(message);
+    //============================================================= Button Functions ==================================================
+
+    function searchLicenceplate() {
+        if (currentCar) {
+            livetracking(false);
+        }
+        var licenceplate = document.getElementById('tbLicenceplate').value;
+        if (validateInput(licenceplate)) {
+            doAjax('GetCarWithLicenceplate', 'Car', { 'licenceplate': licenceplate }).done(function (car) {
+                if (validateAjaxResponseCar(car)) {
+                    currentCar = car;
+                    livetracking(true);
+                }
+                else {
+                    alert('Something went wrong');
+                }
+            }).fail(function (jqXHR, textStatus) {
+                alert('No car found with licenceplate: "' + licenceplate + '"');
+            });
+
+        }
+        else {
+            alert('Enter a valid licenceplate');
+        }
+    }
+
+    function livetracking(shouldStart) {
+        if (currentCar) {
+            if (shouldStart) {
+                document.getElementById('status').innerHTML = "<p>Live Tracking of: " + currentCar.LicencePlate + "</p>";
+            }
+            else {
+                document.getElementById('status').innerHTML = "<p>Showing history of: " + currentCar.LicencePlate + "</p>";
+            }
+            clearGoogleMap();
+            var message = { cartrackerId: currentCar.CarTrackerId, isStartSession: shouldStart };
+            doSend(message);
+        }
+        else {
+            alert('Enter a licenceplate first');
+        }
+    }
+
+    function showHistory() {
+        livetracking(false);
+        if (currentCar) {
+            var cartrackerid = currentCar.CarTrackerId;
+            var startDate = document.getElementById('startdate').value;
+            var endDate = document.getElementById('enddate').value;
+            doAjax("GetLocationsFromCarWithingPeriod", "Car", { cartrackerId: cartrackerid, startDate: startDate, endDate: endDate }).done(function (data) {
+                if (data.length > 0) {
+                    data.sort(compareSerialNumbers);
+                    data.sort(compare);
+                    drawHistoryOnMap(data);
+                }
+                else {
+                    alert('No data found for car with licenceplate: ' + currentCar.LicencePlate + ', between ' + startDate + ' and ' + endDate);
+                }
+
+            }).fail(function (jqXHR, textStatus) {
+                alert('Something went wrong when getting histroy for cartrackerid: ' + cartrackerid + ', startDate: ' + startDate + ', endDate: ' + endDate, + ', Textstatus: ' + textStatus + ', jqXHR: ' + jqXHR);
+            });
+        }
+    }
+
+    function compare(a, b) {
+        if (a[0] < b[0]) return -1;
+        if (a[0] > b[0]) return 1;
+        return 0;
+    }
+
+    function compareSerialNumbers(a, b) {
+        if (a.SerialNumber < b.SerialNumber) return -1;
+        if (a.SerialNumber > b.SerialNumber) return 1;
+        return 0;
+    }
+
+    function doAjax(action, controller, data) {
+        return $.ajax({
+            url: '/' + controller + '/' + action,
+            type: 'GET',
+            datatype: 'json',
+            cache: false,
+            data: data
+        });
+    }
+
+    function validateInput(input) {
+        if (input) {
+            return true;
+        }
+        return false;
+    }
+
+    function validateAjaxResponseCar(car) {
+        if (!car.Stolen && car.LicencePlate && car.CarTrackerId > -1) {
+            return true;
+        }
+        return false;
     }
 
     //invoke init() on load
     window.addEventListener("load", init, false);
-
+    google.maps.event.addDomListener(window, 'load', initialize);
 
 </script>
-@using (Html.BeginForm("Map", "Car", FormMethod.Get))
-{
-    <div class="form-group">
-        <div class="input-group">
-            @Html.TextBoxFor(model => model.Car.LicencePlate, new { @class = "form-control", autofocus = "true", required = "true", placeholder = "Search a licenceplate e.g. (44-DD-33)" })
-            <span class="input-group-btn">
-                <button class="btn btn-primary" type="submit">
-                    <i class="fa fa-search" />
-                    Find
-                </button>
-            </span>
-        </div>
+<div class="form-group">
+    <div class="input-group">
+        <input type="text" id="tbLicenceplate" class="form-control" autofocus required="true" placeholder="Search a licenceplate e.g. (44-DD-33)" />
+        <span class="input-group-btn">
+            <button class="btn btn-primary" onclick="searchLicenceplate()">
+                <i class="fa fa-search" />
+                Find
+            </button>
+        </span>
     </div>
-    <div class="row">
-        <div class="col-xs-8">
-            <div class="row">
-                <div class="col-xs-6 ">
-                    <div class="form-group">
-                        <label class="control-label">Start</label>
-                        @Html.TextBoxFor(model => model.Start, new { @class = "datepicker form-control" })
-                    </div>
+</div>
+<div class="row">
+    <div class="col-xs-8">
+        <div class="row">
+            <div class="col-xs-6 ">
+                <div class="form-group">
+                    <label class="control-label">Start</label>
+                    <input type="text" id="startdate" class="datepicker form-control" />
                 </div>
-                <div class="col-xs-6">
-                    <div class="form-group">
-                        <label class="control-label">End</label>
-                        <div class="input-group">
-                            @Html.TextBoxFor(model => model.End, new { @class = "datepicker form-control" })
-
-                            <span class="input-group-btn">
-                                <button class="btn btn-primary" onclick="stoplivetracking()">History</button>
-                            </span>
-                        </div>
+            </div>
+            <div class="col-xs-6">
+                <div class="form-group">
+                    <label class="control-label">End</label>
+                    <div class="input-group">
+                        <input type="text" id="enddate" class="datepicker form-control" />
+                        <span class="input-group-btn">
+                            <button class="btn btn-primary" id="btnHistory" onclick="showHistory()">History</button>
+                        </span>
                     </div>
                 </div>
             </div>
-
         </div>
-        <div class="col-xs-4">
-            <button class="btn btn-primary pull-right" style="margin-top: 25px;" onclick="startlivetracking()">Live</button>
-        </div>
-        <br />
     </div>
+    <div class="col-xs-4">
+        <button class="btn btn-primary pull-right" id="btnLive" style="margin-top: 25px;" onclick="livetracking(true)">Live</button>
+    </div>
+    <br />
+</div>
 
-    <div id="googleMap" style="width:500px;height:380px;"></div>
-    @*@foreach (var trackingPeriod in Model.TrackingPeriods)
-        {
-            <div data-marker="@Json.Encode(trackingPeriod)"></div>
-        }*@
+<div id="status">No licenceplate selected</div>
 
-    <div id="output" />
-}
+<div id="googleMap" style="width:100%;height:400px;"></div>
+
+
+<div id="output" />

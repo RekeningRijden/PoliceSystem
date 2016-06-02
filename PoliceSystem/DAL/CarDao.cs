@@ -16,7 +16,7 @@ namespace PoliceSystem.DAL
 
         Car FindById(int id, PoliceDbContext context);
 
-        Car FindByLicencePlate(string licencePlate, PoliceDbContext context);
+        Car FindByLicencePlate(string licencePlate, PoliceDbContext context, bool withThefts);
 
         bool CarExists(string licencePlate, PoliceDbContext context);
 

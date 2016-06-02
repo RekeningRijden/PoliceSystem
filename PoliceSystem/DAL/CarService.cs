@@ -36,11 +36,11 @@ namespace PoliceSystem.DAL
             }
         }
 
-        public Car FindByLicencePlate(string licencePlate)
+        public Car FindByLicencePlate(string licencePlate, bool withThefts)
         {
             using (PoliceDbContext context = new PoliceDbContext())
             {
-                return carDao.FindByLicencePlate(licencePlate, context);
+                return carDao.FindByLicencePlate(licencePlate, context, withThefts);
             }
         }
 

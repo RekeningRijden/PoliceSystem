@@ -47,6 +47,7 @@ namespace PoliceSystem.DAL
             Car car = new Car();
             car.LicencePlate = "44-DD-33";
             car.Stolen = false;
+            car.CarTrackerId = 1;
 
             db.Cars.Add(car);
             db.SaveChanges();
