@@ -33,13 +33,5 @@ namespace PoliceSystem.DAL
                 theftInfoDao.Remove(theftInfo, context);
             }
         }
-
-        public void FindById(int id)
-        {
-            using (PoliceDbContext context = new PoliceDbContext())
-            {
-                theftInfoDao.FindById(id, context);
-            }
-        }
     }
 }

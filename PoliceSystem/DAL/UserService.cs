@@ -66,7 +66,7 @@ namespace PoliceSystem.DAL
             }
         }
 
-        public List<User> getAllUsers()
+        public List<User> GetAllUsers()
         {
             using (PoliceDbContext context = new PoliceDbContext())
             {

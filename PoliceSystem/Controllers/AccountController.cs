@@ -57,7 +57,7 @@ namespace PoliceSystem.Controllers
         [Authorize(Roles="admin")]
         public ActionResult Manage()
         {
-            List<User> users = userService.getAllUsers();
+            List<User> users = userService.GetAllUsers();
             return View(users);
         }
 
