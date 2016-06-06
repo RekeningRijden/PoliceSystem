@@ -184,8 +184,14 @@
         if (validateInput(licenceplate)) {
             doAjax('GetCarWithLicenceplate', 'Car', { 'licenceplate': licenceplate }).done(function (car) {
                 if (validateAjaxResponseCar(car)) {
-                    currentCar = car;
-                    livetracking(true);
+                    if (car.Stolen) {
+                        currentCar = car;
+                        livetracking(true);
+                    }
+                    else {
+                        alert('Car is not stolen');
+                    }
+                    
                 }
                 else {
                     alert('Something went wrong');
@@ -269,7 +275,7 @@
     }
 
     function validateAjaxResponseCar(car) {
-        if (!car.Stolen && car.LicencePlate && car.CarTrackerId > -1) {
+        if (car.LicencePlate && car.CarTrackerId > -1) {
             return true;
         }
         return false;
