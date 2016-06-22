@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using PoliceSystem.DAL;
 using PoliceSystem.Models.Domain;
 using System;
@@ -22,39 +23,39 @@ namespace PoliceSystem.Api
 
             CarService carService = new CarService();
 
-            Car source = JsonConvert.DeserializeObject<Car>(json);
+            var format = "dd-MM-yyyy";
+            var dateTimeConverter = new IsoDateTimeConverter { DateTimeFormat = format };
+
+            Car source = JsonConvert.DeserializeObject<Car>(json, dateTimeConverter);
             Car target = carService.FindByLicencePlate(source.LicencePlate, true);
             Boolean carExists = target != null;
             target = carExists ? target : new Car();
 
             Address address = await new LocationCalls().GetAddress(source.Position);
 
-            if (source.Stolen)
-            {
-                Theftinfo theft = new Theftinfo();
-                theft.LastSeenLocation = address;
-                theft.LastSeenDate = source.Position.Date;
 
-                target.Thefts.Add(theft);
-
-                if (carExists)
-                {
-                    carService.Update(target);
-                }
-                else 
-                {
-                    carService.Create(target);
-                }
-            }
-            else if (!source.Stolen && carExists)
+            if (target.Stolen)
             {
                 target.Thefts.Last().CarFoundLocation.Street = address.Street;
                 target.Thefts.Last().CarFoundLocation.StreetNr = address.StreetNr;
                 target.Thefts.Last().CarFoundLocation.ZipCode = address.ZipCode;
                 target.Thefts.Last().CarFoundLocation.City = address.City;
                 target.Thefts.Last().CarFoundLocation.Country = address.Country;
+                target.Stolen = false;
 
                 carService.Update(target);
+            }
+            else
+            {
+                Theftinfo theft = new Theftinfo();
+                theft.LastSeenLocation = address;
+                theft.LastSeenDate = source.Position.Date;
+
+                target.Thefts.Add(theft);
+                target.LicencePlate = source.LicencePlate;
+                target.Stolen = true;
+
+                carService.Create(target);
             }
         }
     }

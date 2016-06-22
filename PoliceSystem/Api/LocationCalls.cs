@@ -176,13 +176,16 @@ namespace PoliceSystem.Api
                                         case 2:
                                             address.City = reader.Value.ToString();
                                             break;
-                                        case 3:
+                                        case 5:
                                             address.Country = reader.Value.ToString();
+                                            break;
+                                        case 6:
+                                            address.ZipCode = reader.Value.ToString();
                                             break;
                                     }
 
                                     i++;
-                                    if (i == 4)
+                                    if (i == 7)
                                         break;
                                 }
 

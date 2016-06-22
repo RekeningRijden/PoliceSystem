@@ -16,7 +16,7 @@ namespace PoliceSystem.Api
         {
             return new ConnectionFactory()
             {
-                // HostName = "192.168.99.100",
+                //HostName = "192.168.99.100",
                 //Port = 5672,
                 //UserName = "test",
                 //Password = "test"
