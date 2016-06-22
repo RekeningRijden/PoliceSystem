@@ -18,6 +18,12 @@ namespace PoliceSystem.Api
         private const string EXCHANGE = "portugal_car_stolen_exchange";
         private const string ROUTING_KEY = "PT";
 
+        /// <summary>
+        /// Send car data to the portugal_car_stolen queue when a car has been stolen or found.
+        /// The car information to send is specified by the european contracts and send in JSON format via JMS.
+        /// </summary>
+        /// <param name="car">to get the data from</param>
+        /// <returns></returns>
         public async Task<Boolean> SendCarChange(Car car)
         {
             Theftinfo theft = car.Thefts.Last();
@@ -42,6 +48,11 @@ namespace PoliceSystem.Api
             return await Send(json);
         }
 
+        /// <summary>
+        /// Send a JSON string to a RabbitMQ JMS queue.
+        /// </summary>
+        /// <param name="json">data to send</param>
+        /// <returns></returns>
         private async Task<Boolean> Send(string json)
         {
             var factory = JMSHelper.buildConnectionFactory();

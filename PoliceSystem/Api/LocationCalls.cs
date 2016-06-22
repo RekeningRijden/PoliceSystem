@@ -62,6 +62,11 @@ namespace PoliceSystem.Api
             return await GetAllTrackingPeriodsFromUri(uri);
         }
 
+        /// <summary>
+        /// Find the coordinates of a Address by requesting a google maps transform.
+        /// </summary>
+        /// <param name="address">to get the coordinates from</param>
+        /// <returns>a Position object with the found coordinates</returns>
         public async Task<Position> GetPosition(Address address)
         {
 
@@ -122,6 +127,11 @@ namespace PoliceSystem.Api
             return null;
         }
 
+        /// <summary>
+        /// Find the Address of a set of coordinates by requesting a google maps transform.
+        /// </summary>
+        /// <param name="position">to get the Address from</param>
+        /// <returns>an Address object</returns>
         public async Task<Address> GetAddress(Position position)
         {
 

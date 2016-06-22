@@ -8,9 +8,10 @@ namespace PoliceSystem.Api
 {
     public class JMSHelper
     {
-
-
-
+        /// <summary>
+        /// Creates the connectionFactory needed to communicate with RabbitMQ.
+        /// </summary>
+        /// <returns>a connectionFactory</returns>
         public static ConnectionFactory buildConnectionFactory()
         {
             return new ConnectionFactory()

@@ -16,6 +16,10 @@ namespace PoliceSystem.Api
         private const string EXCHANGE = "portugal_foreign_car_stolen_exchange";
         private const string ROUTING_KEY = "PT";
 
+        /// <summary>
+        /// Creates a thread that listens to the portugal_foreign_car_stolen queue.
+        /// Redirects the message to the JMSHandler to be decoded.
+        /// </summary>
         public void init()
         {
             Thread listener = new Thread(() =>
