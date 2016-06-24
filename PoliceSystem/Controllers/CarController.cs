@@ -105,7 +105,7 @@ namespace PoliceSystem.Controllers
         }
 
         [HttpPost]
-        public ActionResult Car(CarViewModel carViewModel)
+        public async Task<ActionResult> Car(CarViewModel carViewModel)
         {
 
             Car car = new CarService().FindById(carViewModel.Car.Id);
@@ -125,6 +125,7 @@ namespace PoliceSystem.Controllers
                 car.Thefts.Last().CarFoundLocation.Country = cfl.Country;
             }
 
+            await new JMSProducer().SendCarChange(car);
             new CarService().Update(car);
 
             return RedirectToAction("Car", "Car", new { licencePlate = car.LicencePlate });

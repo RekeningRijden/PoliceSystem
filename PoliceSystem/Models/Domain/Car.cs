@@ -21,8 +21,13 @@ namespace PoliceSystem.Models.Domain
         [JsonProperty("licencePlate")]
         public string LicencePlate { get; set; }
 
+        [JsonProperty("stolen")]
         public bool Stolen { get; set; }
         public ICollection<Theftinfo> Thefts { get; set; }
+
+        [NotMapped]
+        [JsonProperty("lastPosition")]
+        public Position Position { get; set; }
 
         [NotMapped]
         [JsonProperty("currentOwnership")]

@@ -27,13 +27,13 @@ namespace PoliceSystem.Api
                 client.DefaultRequestHeaders.Accept.Clear();
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-                HttpResponseMessage response = await client.GetAsync("api/users");
+                HttpResponseMessage response = await client.GetAsync("api/users?pageIndex=0&pageSize=50");
                 if (response.IsSuccessStatusCode)
                 {
                     string jsonResponse = await response.Content.ReadAsStringAsync();
                     System.Diagnostics.Debug.WriteLine("RESPONSE: " + jsonResponse);
                     List<Driver> drivers = JsonConvert.DeserializeObject<List<Driver>>(jsonResponse);
-                    
+
                     return drivers;
                 }
                 else
