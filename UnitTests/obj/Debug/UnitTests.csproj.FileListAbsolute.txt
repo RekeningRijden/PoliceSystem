@@ -58,3 +58,5 @@ C:\Users\Eric de Regter\Documents\git\policesystem\UnitTests\bin\Debug\EntityFra
 C:\Users\Eric de Regter\Documents\git\policesystem\UnitTests\bin\Debug\EntityFramework.SqlServer.xml
 C:\Users\Eric de Regter\Documents\git\policesystem\UnitTests\bin\Debug\MySql.Data.dll
 C:\Users\Eric de Regter\Documents\git\policesystem\UnitTests\bin\Debug\MySql.Data.Entity.EF6.dll
+C:\Users\Eric de Regter\Documents\git\policesystem\UnitTests\bin\Debug\RabbitMQ.Client.dll
+C:\Users\Eric de Regter\Documents\git\policesystem\UnitTests\bin\Debug\RabbitMQ.Client.xml

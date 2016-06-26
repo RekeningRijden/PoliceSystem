@@ -30,7 +30,17 @@ namespace PoliceSystem.DAL
         
         public void Update(User user, PoliceDbContext context)
         {
-            throw new NotImplementedException();
+            User existingUser = FindById(user.Id, context);
+            if (existingUser != null)
+            {
+                context.Entry(existingUser).CurrentValues.SetValues(user);
+                //context.Entry(user).State = EntityState.Modified;
+                context.SaveChanges();
+            }
+            else
+            {
+                throw new InvalidOperationException("User does not exist");
+            }
         }
 
         public void Remove(int id, PoliceDbContext context)
